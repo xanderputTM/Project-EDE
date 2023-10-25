@@ -163,7 +163,7 @@
 											"top": 164,
 											"width": 175,
 											"height": 13,
-											"text": "int airportID FK",
+											"text": "int airportCode",
 											"horizontalAlignment": 0
 										}
 									],
@@ -374,7 +374,7 @@
 											"top": 141,
 											"width": 191,
 											"height": 13,
-											"text": "varchar takeoffLocation",
+											"text": "varchar takeoffAirportCode",
 											"horizontalAlignment": 0
 										},
 										{
@@ -391,7 +391,7 @@
 											"top": 156,
 											"width": 191,
 											"height": 13,
-											"text": "varchar destination",
+											"text": "varchar destinationAirportCode",
 											"horizontalAlignment": 0
 										},
 										{
@@ -459,7 +459,24 @@
 											"top": 216,
 											"width": 191,
 											"height": 13,
-											"text": "int gateId FK",
+											"text": "int gateNumber",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLAttributeView",
+											"_id": "AAAAAAGLZg2NLpmwCOc=",
+											"_parent": {
+												"$ref": "AAAAAAGLZcBFBHDAt2o="
+											},
+											"model": {
+												"$ref": "AAAAAAGLZg2NJJmtcnc="
+											},
+											"font": "Arial;13;0",
+											"left": 749,
+											"top": 231,
+											"width": 191,
+											"height": 13,
+											"text": "varchar flightNumber",
 											"horizontalAlignment": 0
 										}
 									],
@@ -467,7 +484,7 @@
 									"left": 744,
 									"top": 121,
 									"width": 201,
-									"height": 113
+									"height": 128
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -1785,7 +1802,7 @@
 											"top": 475,
 											"width": 207,
 											"height": 13,
-											"text": "int flightId FK",
+											"text": "varchar flightNumber",
 											"horizontalAlignment": 0
 										},
 										{
@@ -3026,7 +3043,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGLZb/yenCNQbo="
 							},
-							"name": "int airportID FK"
+							"name": "int airportCode"
 						}
 					]
 				},
@@ -3195,7 +3212,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGLZcBFBHC4FI8="
 							},
-							"name": "varchar takeoffLocation"
+							"name": "varchar takeoffAirportCode"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -3203,7 +3220,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGLZcBFBHC4FI8="
 							},
-							"name": "varchar destination"
+							"name": "varchar destinationAirportCode"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -3235,7 +3252,15 @@
 							"_parent": {
 								"$ref": "AAAAAAGLZcBFBHC4FI8="
 							},
-							"name": "int gateId FK"
+							"name": "int gateNumber"
+						},
+						{
+							"_type": "UMLAttribute",
+							"_id": "AAAAAAGLZg2NJJmtcnc=",
+							"_parent": {
+								"$ref": "AAAAAAGLZcBFBHC4FI8="
+							},
+							"name": "varchar flightNumber"
 						}
 					]
 				},
@@ -3476,7 +3501,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGLZc+kw3VJlfE="
 							},
-							"name": "int flightId FK"
+							"name": "varchar flightNumber"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -3484,7 +3509,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGLZc+kw3VJlfE="
 							},
-							"name": "int personId FK"
+							"name": "int personId FK",
+							"type": ""
 						}
 					]
 				}
