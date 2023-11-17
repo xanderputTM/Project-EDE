@@ -2,20 +2,20 @@ package fact.it.airportservice.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "airports")
-@Getter
-@Setter
+@Document(value = "airports")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Data
 public class Airport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
     private String name;
     private String code;
