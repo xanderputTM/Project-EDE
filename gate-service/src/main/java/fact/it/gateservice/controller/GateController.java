@@ -18,5 +18,5 @@ public class GateController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Flight> getAllFlights() { return gateService.getAllFlights(); }
+    public List<GateResponse> getAllGates() { return gateService.getAllGates(); }
 }

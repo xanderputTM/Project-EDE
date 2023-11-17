@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 @Builder
@@ -14,8 +15,8 @@ import java.math.BigDecimal;
 public class FlightResponse {
     private String flightNumber;
     private boolean isDepartingFlight;
-    private String RemoteAirportCode;
-    private DateTime scheduledTime;
+    private String remoteAirportCode;
+    private Date scheduledTime;
     private String gateNumber;
-    private String RegistrationNumber;
+    private String registrationNumber;
 }

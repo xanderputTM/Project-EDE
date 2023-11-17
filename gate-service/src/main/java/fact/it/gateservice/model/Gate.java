@@ -1,4 +1,4 @@
-package fact.it.flight.model;
+package fact.it.gateservice.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,8 +23,4 @@ public class Gate {
     private int number;
 
     private String airportCode;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Flight> flightList;
-
 }
