@@ -23,6 +23,7 @@ services:
     - mysql_gate_data:/var/lib/mysql
   environment:
    MYSQL_ROOT_PASSWORD: abc123
+
  mysql-passenger:
    image: mysql:latest
    ports:
