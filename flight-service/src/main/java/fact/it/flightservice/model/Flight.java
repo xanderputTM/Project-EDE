@@ -1,4 +1,4 @@
-package fact.it.flight.model;
+package fact.it.flightservice.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -14,7 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Gate {
+public class Flight {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,13 +27,9 @@ public class Gate {
 
     private String remoteAirportCode;
 
-    private DateTime scheduledTime;
+    private Date scheduledTime;
 
     private String gateNumber;
 
     private String registrationNumber;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Passenger> passengerList;
-
 }
