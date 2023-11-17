@@ -1,0 +1,115 @@
+name: Build and deliver containers
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  airport-service:
+    runs-on: ubuntu-latest
+    name: Java 21 build, test, deliver airport-service container
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          cache: maven
+          distribution: adopt
+
+      - name: Build, test and package project
+        working-directory: ./airport-service
+        run: mvn package -B
+
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker Build
+        run: docker build -t ${{ secrets.DOCKER_USER }}/airport-service:latest ./airport-service
+
+      - name: Upload container to Docker Hub with Push
+        run: docker push ${{ secrets.DOCKER_USER }}/airport-service:latest
+
+  flight-service:
+    runs-on: ubuntu-latest
+    name: Java 21 build, test, deliver flight-service container
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          cache: maven
+          distribution: adopt
+
+      - name: Build, test and package project
+        working-directory: ./flight-service
+        run: mvn package -B
+
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker Build
+        run: docker build -t ${{ secrets.DOCKER_USER }}/flight-service:latest ./flight-service
+
+      - name: Upload container to Docker Hub with Push
+        run: docker push ${{ secrets.DOCKER_USER }}/flight-service:latest
+
+  gate-service:
+    runs-on: ubuntu-latest
+    name: Java 21 build, test, deliver gate-service container
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          cache: maven
+          distribution: adopt
+
+      - name: Build, test and package project
+        working-directory: ./gate-service
+        run: mvn package -B
+
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker Build
+        run: docker build -t ${{ secrets.DOCKER_USER }}/gate-service:latest ./gate-service
+
+      - name: Upload container to Docker Hub with Push
+        run: docker push ${{ secrets.DOCKER_USER }}/gate-service:latest
+
+  passenger-service:
+    runs-on: ubuntu-latest
+    name: Java 21 build, test, deliver passenger-service container
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          cache: maven
+          distribution: adopt
+
+      - name: Build, test and package project
+        working-directory: ./passenger-service
+        run: mvn package -B
+
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker Build
+        run: docker build -t ${{ secrets.DOCKER_USER }}/passenger-service:latest ./passenger-service
+
+      - name: Upload container to Docker Hub with Push
+        run: docker push ${{ secrets.DOCKER_USER }}/passenger-service:latest
