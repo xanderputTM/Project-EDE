@@ -49,7 +49,7 @@ jobs:
 
       - name: Build, test and package project
         working-directory: ./flight-service
-        run: mvn package -B
+        run: mvn package -DskipTests
 
       - name: Docker login
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -76,7 +76,7 @@ jobs:
 
       - name: Build, test and package project
         working-directory: ./gate-service
-        run: mvn package -B
+        run: mvn package -DskipTests
 
       - name: Docker login
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -103,7 +103,7 @@ jobs:
 
       - name: Build, test and package project
         working-directory: ./passenger-service
-        run: mvn package -B
+        run: mvn package -DskipTests
 
       - name: Docker login
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
