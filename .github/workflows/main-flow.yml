@@ -101,10 +101,6 @@ jobs:
           cache: maven
           distribution: adopt
 
-      - name: Clean target folder
-        working-directory: ./passenger-service
-        run: mvn clean
-
       - name: Build, test and package project
         working-directory: ./passenger-service
         run: mvn package -DskipTests
