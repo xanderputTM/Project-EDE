@@ -20,7 +20,7 @@ public class Gate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private int number;
+    private String number;
 
     private String airportCode;
 }

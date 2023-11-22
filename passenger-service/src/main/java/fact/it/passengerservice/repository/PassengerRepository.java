@@ -9,4 +9,7 @@ import java.util.List;
 @Repository
 public interface PassengerRepository extends JpaRepository<Passenger, Integer> {
     List<Passenger> findByFlightNumber(String flightNumber);
+    Passenger getByPnrCode(String pnrCode);
+    void deleteAllByFlightNumber(String flightNumber);
+    void deleteByPnrCode(String pnrCode);
 }

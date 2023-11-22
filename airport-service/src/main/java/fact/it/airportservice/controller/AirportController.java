@@ -1,6 +1,6 @@
 package fact.it.airportservice.controller;
 
-import fact.it.airportservice.dto.AirportResponse;
+import fact.it.airportservice.dto.AirportDto;
 import fact.it.airportservice.service.AirportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,13 +17,13 @@ public class AirportController {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<AirportResponse> getAllAirports() {
+    public List<AirportDto> getAllAirports() {
         return airportService.getAllAirports();
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public AirportResponse getAirportByCode(@RequestParam String code) {
+    public AirportDto getAirportByCode(@RequestParam String code) {
         return airportService.getAirportByCode(code);
     }
 }

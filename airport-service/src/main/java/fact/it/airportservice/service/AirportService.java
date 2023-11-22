@@ -1,7 +1,6 @@
 package fact.it.airportservice.service;
 
-import fact.it.airportservice.AirportServiceApplication;
-import fact.it.airportservice.dto.AirportResponse;
+import fact.it.airportservice.dto.AirportDto;
 import fact.it.airportservice.model.Airport;
 import fact.it.airportservice.repository.AirportRepository;
 import jakarta.annotation.PostConstruct;
@@ -36,18 +35,18 @@ public class AirportService {
         }
     }
 
-    public List<AirportResponse> getAllAirports() {
+    public List<AirportDto> getAllAirports() {
         List<Airport> products = airportRepository.findAll();
 
         return products.stream().map(this::mapToAirportResponse).toList();
     }
 
-    public AirportResponse getAirportByCode(String code) {
+    public AirportDto getAirportByCode(String code) {
         return mapToAirportResponse(airportRepository.findByCode(code));
     }
 
-    private AirportResponse mapToAirportResponse(Airport airport) {
-        return AirportResponse.builder()
+    private AirportDto mapToAirportResponse(Airport airport) {
+        return AirportDto.builder()
                 .code(airport.getCode())
                 .name(airport.getName())
                 .country(airport.getCountry())

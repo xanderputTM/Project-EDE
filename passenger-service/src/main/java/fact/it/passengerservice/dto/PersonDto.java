@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PersonResponse {
+public class PersonDto {
     private String firstName;
     private String lastName;
     private String nationality;

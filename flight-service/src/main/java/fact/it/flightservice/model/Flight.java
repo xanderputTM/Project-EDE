@@ -1,10 +1,7 @@
 package fact.it.flightservice.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.List;
 @Table(name = "flights")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Flight {
@@ -32,4 +30,5 @@ public class Flight {
     private String gateNumber;
 
     private String registrationNumber;
+
 }

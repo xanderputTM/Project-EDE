@@ -1,6 +1,6 @@
 package fact.it.passengerservice.controller;
 
-import fact.it.passengerservice.dto.PassengerResponse;
+import fact.it.passengerservice.dto.PassengerDto;
 import fact.it.passengerservice.service.PassengerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,9 +14,33 @@ import java.util.List;
 public class PassengerController {
     private final PassengerService passengerService;
 
-    @GetMapping
+    @GetMapping("/flight")
     @ResponseStatus(HttpStatus.OK)
-    public List<PassengerResponse> getAllPassengersByFlightCode(@RequestParam String flightNumber) {
+    public List<PassengerDto> getAllPassengersByFlightNumber(@RequestParam String flightNumber) {
         return passengerService.getAllPassengersByFlightNumber(flightNumber);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void createPassenger(@RequestBody PassengerDto passengerDto) {
+        passengerService.createPassenger(passengerDto);
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePassenger(@RequestParam String pnrCode, @RequestBody PassengerDto passengerDto) {
+        passengerService.updatePassenger(pnrCode, passengerDto);
+    }
+
+    @DeleteMapping("/flight")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAllPassengersByFlightNumber(@RequestParam String flightNumber) {
+        passengerService.deleteAllPassengersByFlightNumber(flightNumber);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void deletePassengerByPnrCode(@RequestParam String pnrCode) {
+        passengerService.deletePassengerByPnrCode(pnrCode);
     }
 }
