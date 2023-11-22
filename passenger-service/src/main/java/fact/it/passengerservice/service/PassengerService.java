@@ -1,7 +1,7 @@
 package fact.it.passengerservice.service;
 
-import fact.it.passengerservice.dto.PassengerResponse;
-import fact.it.passengerservice.dto.PersonResponse;
+import fact.it.passengerservice.dto.PassengerDto;
+import fact.it.passengerservice.dto.PersonDto;
 import fact.it.passengerservice.model.Passenger;
 import fact.it.passengerservice.model.Person;
 import fact.it.passengerservice.repository.PassengerRepository;
@@ -18,6 +18,7 @@ import java.util.List;
 public class PassengerService {
     private final PassengerRepository passengerRepository;
 
+<<<<<<< HEAD
     @PostConstruct
     public void loadData() {
         if(passengerRepository.count() <= 0){
@@ -34,29 +35,74 @@ public class PassengerService {
         }
     }
     public List<PassengerResponse> getAllPassengersByFlightNumber(String flightNumber) {
+=======
+    public List<PassengerDto> getAllPassengersByFlightNumber(String flightNumber) {
+>>>>>>> main
         List<Passenger> passengers = passengerRepository.findByFlightNumber(flightNumber);
 
         return passengers
                 .stream()
-                .map(this::mapToPassengerResponse)
+                .map(this::mapToPassengerDto)
                 .toList();
     }
 
-    private PassengerResponse mapToPassengerResponse(Passenger passenger) {
-        return PassengerResponse.builder()
+    public void createPassenger(PassengerDto passengerDto) {
+        Passenger passenger = mapToPassenger(passengerDto);
+        passengerRepository.save(passenger);
+    }
+
+    public void updatePassenger(String pnrCode, PassengerDto passengerDto) {
+        Passenger oldPassenger =  passengerRepository.getByPnrCode(pnrCode);
+        Passenger newPassenger = mapToPassenger(passengerDto);
+        newPassenger.setId(oldPassenger.getId());
+        newPassenger.setPerson(oldPassenger.getPerson());
+
+        passengerRepository.save(newPassenger);
+    }
+
+    public void deleteAllPassengersByFlightNumber(String flightNumber) {
+        passengerRepository.deleteAllByFlightNumber(flightNumber);
+    }
+
+    public void deletePassengerByPnrCode(String pnrCode) {
+        passengerRepository.deleteByPnrCode(pnrCode);
+    }
+
+    private PassengerDto mapToPassengerDto(Passenger passenger) {
+        return PassengerDto.builder()
+                .pnrCode(passenger.getPnrCode())
                 .flightNumber(passenger.getFlightNumber())
                 .seat(passenger.getSeat())
                 .hasCheckedIn(passenger.getHasCheckedIn())
-                .person(mapToPersonResponse(passenger.getPerson()))
+                .person(mapToPersonDto(passenger.getPerson()))
                 .build();
     }
 
-    private PersonResponse mapToPersonResponse(Person person) {
-        return PersonResponse.builder()
+    private Passenger mapToPassenger(PassengerDto passengerDto) {
+        return Passenger.builder()
+                .pnrCode(passengerDto.getPnrCode())
+                .flightNumber(passengerDto.getFlightNumber())
+                .seat(passengerDto.getSeat())
+                .hasCheckedIn(passengerDto.getHasCheckedIn())
+                .person(mapToPerson(passengerDto.getPerson()))
+                .build();
+    }
+
+    private PersonDto mapToPersonDto(Person person) {
+        return PersonDto.builder()
                 .firstName(person.getFirstName())
                 .lastName(person.getLastName())
                 .nationality(person.getNationality())
                 .birthDate(person.getBirthDate())
+                .build();
+    }
+
+    private Person mapToPerson(PersonDto personDto) {
+        return Person.builder()
+                .firstName(personDto.getFirstName())
+                .lastName(personDto.getLastName())
+                .nationality(personDto.getNationality())
+                .birthDate(personDto.getBirthDate())
                 .build();
     }
 }

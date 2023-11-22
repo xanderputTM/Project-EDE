@@ -1,8 +1,7 @@
 package fact.it.gateservice.controller;
 
-import fact.it.gateservice.dto.GateResponse;
+import fact.it.gateservice.dto.GateDto;
 import fact.it.gateservice.service.GateService;
-import fact.it.gateservice.model.Gate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,19 @@ public class GateController {
 
     private final GateService gateService;
 
-    @GetMapping
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<GateResponse> getAllGates() { return gateService.getAllGates(); }
+    public List<GateDto> getAllGates() { return gateService.getAllGates(); }
+
+    @GetMapping("/airport/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<GateDto> getGatesByAirportCode(@RequestParam String airportCode) {
+        return gateService.getGatesByAirportCode(airportCode);
+    }
+
+    @GetMapping("/airport")
+    @ResponseStatus(HttpStatus.OK)
+    public GateDto getGateByAirportCodeAndGateNumber(@RequestParam String airportCode, @RequestParam String gateNumber) {
+        return gateService.getGateByAirportCodeAndGateNumber(airportCode, gateNumber);
+    }
 }

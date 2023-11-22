@@ -34,14 +34,25 @@ public class GateService {
     }
 
 
-    public List<GateResponse> getAllGates() {
+    public List<GateDto> getAllGates() {
         List<Gate> gates = gateRepository.findAll();
 
         return gates.stream().map(this::mapToGateResponse).toList();
     }
 
-    private GateResponse mapToGateResponse(Gate gate) {
-        return GateResponse.builder()
+    public List<GateDto> getGatesByAirportCode(String airportCode) {
+        List<Gate> gates = gateRepository.findAllByAirportCode(airportCode);
+
+        return gates.stream().map(this::mapToGateResponse).toList();
+    }
+
+    public GateDto getGateByAirportCodeAndGateNumber(String airportCode, String gateNumber) {
+        Gate gate = gateRepository.findByAirportCodeAndNumber(airportCode, gateNumber);
+        return mapToGateResponse(gate);
+    }
+
+    private GateDto mapToGateResponse(Gate gate) {
+        return GateDto.builder()
                 .number(gate.getNumber())
                 .airportCode(gate.getAirportCode())
                 .build();
