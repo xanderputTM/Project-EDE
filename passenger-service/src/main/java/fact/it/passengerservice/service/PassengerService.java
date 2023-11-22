@@ -5,6 +5,7 @@ import fact.it.passengerservice.dto.PersonDto;
 import fact.it.passengerservice.model.Passenger;
 import fact.it.passengerservice.model.Person;
 import fact.it.passengerservice.repository.PassengerRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,26 @@ import java.util.List;
 public class PassengerService {
     private final PassengerRepository passengerRepository;
 
+<<<<<<< HEAD
+    @PostConstruct
+    public void loadData() {
+        if(passengerRepository.count() <= 0){
+            Passenger passenger1 = new Passenger();
+            passenger1.setHasCheckedIn(true);
+            passenger1.setFlightNumber("2280");
+
+            Passenger passenger2 = new Passenger();
+            passenger2.setHasCheckedIn(false);
+            passenger2.setFlightNumber("2440");
+
+            passengerRepository.save(passenger1);
+            passengerRepository.save(passenger2);
+        }
+    }
+    public List<PassengerResponse> getAllPassengersByFlightNumber(String flightNumber) {
+=======
     public List<PassengerDto> getAllPassengersByFlightNumber(String flightNumber) {
+>>>>>>> main
         List<Passenger> passengers = passengerRepository.findByFlightNumber(flightNumber);
 
         return passengers
