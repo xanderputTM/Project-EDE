@@ -20,4 +20,10 @@ public class AirportController {
     public List<AirportResponse> getAllAirports() {
         return airportService.getAllAirports();
     }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public AirportResponse getAirportByCode(@RequestParam String code) {
+        return airportService.getAirportByCode(code);
+    }
 }
