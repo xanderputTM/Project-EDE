@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AirportResponse {
+public class AirportDto {
     private String name;
     private String code;
     private String country;

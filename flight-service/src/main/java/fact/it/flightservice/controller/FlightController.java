@@ -1,7 +1,6 @@
 package fact.it.flightservice.controller;
 
-//import fact.it.flightservice.dto.FlightRequest;
-import fact.it.flightservice.dto.FlightResponse;
+import fact.it.flightservice.dto.FlightDto;
 import fact.it.flightservice.service.FlightService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,24 +15,40 @@ public class FlightController {
 
     private final FlightService flightService;
 
-//    @PostMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public void createFlight
-//            (@RequestBody FlightRequest flightRequest) {
-//        flightService.createFlight(flightRequest);
-//    }
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public FlightDto getFlightByFlightNumber(@RequestParam String flightNumber) {
+        return flightService.getFlightByFlightNumber(flightNumber);
+    }
 
-//    @GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<FlightResponse> getAllFlightsBySkuCode
-//            (@RequestParam List<String> skuCode) {
-//        return flightService.getAllFlightsBySkuCode(skuCode);
-//    }
+    @GetMapping("/gate")
+    @ResponseStatus(HttpStatus.OK)
+    public List<FlightDto> getFlightsByGateNumber(@RequestParam String gateNumber) {
+        return flightService.getFlightsByGateNumber(gateNumber);
+    }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<FlightResponse> getAllFlights() {
+    public List<FlightDto> getAllFlights() {
         return flightService.getAllFlights();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void createFlight(@RequestBody FlightDto flightDto) {
+        flightService.createFlight(flightDto);
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void updateFlight(@RequestParam String flightNumber, @RequestBody FlightDto flightDto) {
+        flightService.updateFlight(flightNumber, flightDto);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteFlight(@RequestParam String flightNumber) {
+        flightService.deleteFlight(flightNumber);
     }
 }
 
