@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,13 +22,31 @@ public class PassengerService {
     @PostConstruct
     public void loadData() {
         if(passengerRepository.count() <= 0){
+            Person person1 = new Person();
+            person1.setBirthDate(new Date());
+            person1.setFirstName("Joe");
+            person1.setLastName("Jenkins");
+            person1.setNationality("Belgium");
+
             Passenger passenger1 = new Passenger();
             passenger1.setHasCheckedIn(true);
             passenger1.setFlightNumber("2280");
+            passenger1.setSeat("1E");
+            passenger1.setPnrCode("123ABC");
+            passenger1.setPerson(person1);
+
+            Person person2 = new Person();
+            person2.setBirthDate(new Date());
+            person2.setFirstName("George");
+            person2.setLastName("Baker");
+            person2.setNationality("United Kingdom");
 
             Passenger passenger2 = new Passenger();
             passenger2.setHasCheckedIn(false);
             passenger2.setFlightNumber("2440");
+            passenger2.setSeat("1F");
+            passenger2.setPnrCode("234KGS");
+            passenger1.setPerson(person2);
 
             passengerRepository.save(passenger1);
             passengerRepository.save(passenger2);
