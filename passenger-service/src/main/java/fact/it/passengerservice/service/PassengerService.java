@@ -18,7 +18,6 @@ import java.util.List;
 public class PassengerService {
     private final PassengerRepository passengerRepository;
 
-<<<<<<< HEAD
     @PostConstruct
     public void loadData() {
         if(passengerRepository.count() <= 0){
@@ -34,10 +33,8 @@ public class PassengerService {
             passengerRepository.save(passenger2);
         }
     }
-    public List<PassengerResponse> getAllPassengersByFlightNumber(String flightNumber) {
-=======
+
     public List<PassengerDto> getAllPassengersByFlightNumber(String flightNumber) {
->>>>>>> main
         List<Passenger> passengers = passengerRepository.findByFlightNumber(flightNumber);
 
         return passengers
