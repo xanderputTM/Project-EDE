@@ -42,6 +42,10 @@ public class AirportService {
         return products.stream().map(this::mapToAirportResponse).toList();
     }
 
+    public AirportResponse getAirportByCode(String code) {
+        return mapToAirportResponse(airportRepository.findByCode(code));
+    }
+
     private AirportResponse mapToAirportResponse(Airport airport) {
         return AirportResponse.builder()
                 .code(airport.getCode())
@@ -50,4 +54,6 @@ public class AirportService {
                 .city(airport.getCity())
                 .build();
     }
+
+
 }
