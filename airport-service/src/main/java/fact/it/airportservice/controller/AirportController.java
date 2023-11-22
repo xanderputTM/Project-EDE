@@ -15,7 +15,7 @@ import java.util.List;
 public class AirportController {
     private final AirportService airportService;
 
-    @GetMapping("/all")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<AirportResponse> getAllAirports() {
         return airportService.getAllAirports();
