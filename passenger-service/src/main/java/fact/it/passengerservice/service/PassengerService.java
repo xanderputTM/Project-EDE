@@ -70,8 +70,11 @@ public class PassengerService {
     public void updatePassenger(String pnrCode, PassengerDto passengerDto) {
         Passenger oldPassenger =  passengerRepository.getByPnrCode(pnrCode);
         Passenger newPassenger = mapToPassenger(passengerDto);
+        Person newPerson = newPassenger.getPerson();
+        newPerson.setId(oldPassenger.getPerson().getId());
+
         newPassenger.setId(oldPassenger.getId());
-        newPassenger.setPerson(oldPassenger.getPerson());
+        newPassenger.setPerson(newPerson);
 
         passengerRepository.save(newPassenger);
     }
