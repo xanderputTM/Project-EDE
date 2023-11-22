@@ -4,6 +4,7 @@ import fact.it.flightservice.dto.*;
 import fact.it.flightservice.model.Flight;
 import fact.it.flightservice.repository.FlightRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FlightService {
 
     private final FlightRepository flightRepository;
@@ -73,7 +75,6 @@ public class FlightService {
 
     // TODO : Delete passengers
     public void deleteFlight(String flightNumber) {
-
         flightRepository.deleteByFlightNumber(flightNumber);
     }
 

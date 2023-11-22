@@ -1,6 +1,7 @@
 package fact.it.flightservice.repository;
 
 import fact.it.flightservice.model.Flight;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
