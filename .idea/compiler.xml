@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="gate-service" />
+        <module name="ApiGatewayApplication" />
         <module name="passenger-service" />
         <module name="flight-service" />
         <module name="airport-service" />
@@ -16,6 +17,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ApiGatewayApplication" options="-parameters" />
       <module name="airport-service" options="-parameters" />
       <module name="flight-service" options="-parameters" />
       <module name="gate-service" options="-parameters" />
