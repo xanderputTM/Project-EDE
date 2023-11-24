@@ -1,0 +1,60 @@
+server:
+  port: 8085
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: INFO
+    reactor.netty: TRACE
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: airport-service
+          uri: http://${AIRPORT_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/airport
+            - Method=GET
+          filters:
+            - SetPath=/api/airport
+        - id: flight-service
+          uri: http://${FLIGHT_SERVICE_BASEURL:localhost:8082}
+          predicates:
+            - Path=/flight
+          filters:
+            - SetPath=/api/flight
+        - id: flight-service-all
+          uri: http://${FLIGHT_SERVICE_BASEURL:localhost:8082}
+          predicates:
+            - Path=/gate/flights
+            - Method=GET
+          filters:
+            - SetPath=/api/flight/gate
+        - id: gate-service-by-airport-code
+          uri: http://${GATE_SERVICE_BASEURL:localhost:8083}
+          predicates:
+            - Path=/airport/gates
+            - Method=GET
+          filters:
+            - SetPath=/api/gate/airport/all
+        - id: gate-service-by-airport-and-gate-number
+          uri: http://${GATE_SERVICE_BASEURL:localhost:8083}
+          predicates:
+            - Path=/airport/gate
+            - Method=GET
+          filters:
+            - SetPath=/api/gate/airport
+        - id: passenger-service
+          uri: http://${PASSENGER_SERVICE_BASEURL:localhost:8084}
+          predicates:
+            - Path=/passenger
+          filters:
+            - SetPath=/api/passenger
+        - id: passenger-service-flight
+          uri: http://${PASSENGER_SERVICE_BASEURL:localhost:8084}
+          predicates:
+            - Path=/flight/passengers
+          filters:
+            - SetPath=/api/passenger/flight

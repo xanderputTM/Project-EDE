@@ -20,15 +20,10 @@ public class Flight {
     private Integer id;
 
     private String flightNumber;
-
     private boolean isDepartingFlight;
-
     private String remoteAirportCode;
-
     private Date scheduledTime;
-
     private String gateNumber;
-
     private String registrationNumber;
-
+    private Integer capacity;
 }

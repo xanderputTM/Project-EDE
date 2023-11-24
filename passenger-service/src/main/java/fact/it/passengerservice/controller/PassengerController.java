@@ -4,6 +4,7 @@ import fact.it.passengerservice.dto.PassengerDto;
 import fact.it.passengerservice.service.PassengerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,15 +22,25 @@ public class PassengerController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void createPassenger(@RequestBody PassengerDto passengerDto) {
-        passengerService.createPassenger(passengerDto);
+    public ResponseEntity<String> createPassenger(@RequestBody PassengerDto passengerDto) {
+        boolean result = passengerService.createPassenger(passengerDto);
+
+        if (result) {
+            return new ResponseEntity<>("Passenger created successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Passenger creation failed", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void updatePassenger(@RequestParam String pnrCode, @RequestBody PassengerDto passengerDto) {
-        passengerService.updatePassenger(pnrCode, passengerDto);
+    public ResponseEntity<String> updatePassenger(@RequestParam String pnrCode, @RequestBody PassengerDto passengerDto) {
+        boolean result = passengerService.updatePassenger(pnrCode, passengerDto);
+
+        if (result) {
+            return new ResponseEntity<>("Passenger updated successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Passenger updating failed", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/flight")

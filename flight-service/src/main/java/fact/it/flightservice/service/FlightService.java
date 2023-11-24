@@ -28,6 +28,7 @@ public class FlightService {
             flight1.setRemoteAirportCode("G0331");
             flight1.setScheduledTime(new Date());
             flight1.setRegistrationNumber("SX-BHR");
+            flight1.setCapacity(2);
 
             Flight flight2 = new Flight();
             flight2.setFlightNumber("2440");
@@ -36,6 +37,7 @@ public class FlightService {
             flight2.setRemoteAirportCode("M032");
             flight2.setScheduledTime(new Date());
             flight2.setRegistrationNumber("MV-TTT");
+            flight1.setCapacity(3);
 
             flightRepository.save(flight1);
             flightRepository.save(flight2);
@@ -86,6 +88,7 @@ public class FlightService {
                 .scheduledTime(flight.getScheduledTime())
                 .gateNumber(flight.getGateNumber())
                 .registrationNumber(flight.getRegistrationNumber())
+                .capacity(flight.getCapacity())
                 .build();
     }
 
@@ -97,6 +100,7 @@ public class FlightService {
                 .scheduledTime(flightDto.getScheduledTime())
                 .gateNumber(flightDto.getGateNumber())
                 .registrationNumber(flightDto.getRegistrationNumber())
+                .capacity(flightDto.getCapacity())
                 .build();
     }
 
