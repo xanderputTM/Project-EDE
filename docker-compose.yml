@@ -75,11 +75,13 @@ services:
  passenger-service:
    depends_on:
      - mysql-passenger
+     - flight-service
    image: putxander/passenger-service
    ports:
      - 8084:8084
    links:
      - mysql-passenger
+     - flight-service
    environment:
      FLIGHT_SERVICE_BASEURL: flight-service:8082
      MYSQL_DB_USERNAME: root
