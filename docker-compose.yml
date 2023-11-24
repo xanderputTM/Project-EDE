@@ -86,6 +86,7 @@ services:
      MYSQL_DB_PASSWORD: abc123
      MYSQL_DB_HOST: mysql-passenger
      MYSQL_DB_PORT: 3306
+
  api-gateway:
    depends_on:
      - airport-service
