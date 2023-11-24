@@ -1,4 +1,4 @@
-package fact.it.flightservice.dto;
+package fact.it.passengerservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

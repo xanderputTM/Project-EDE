@@ -31,7 +31,7 @@ services:
    volumes:
      - mysql_passenger_data:/var/lib/mysql
    environment:
-     MYSQL_ROOT_PASSWORD: abc123
+    MYSQL_ROOT_PASSWORD: abc123
 
  airport-service:
   depends_on:
@@ -42,6 +42,7 @@ services:
   links:
     - mongo-airport
   environment:
+   CURRENT_AIRPORT: BRU
    MONGODB_PORT: 27017
    MONGODB_HOST: mongo-airport
 
@@ -80,10 +81,30 @@ services:
    links:
      - mysql-passenger
    environment:
+     FLIGHT_SERVICE_BASEURL: flight-service:8082
      MYSQL_DB_USERNAME: root
      MYSQL_DB_PASSWORD: abc123
      MYSQL_DB_HOST: mysql-passenger
      MYSQL_DB_PORT: 3306
+ api-gateway:
+   depends_on:
+     - airport-service
+     - flight-service
+     - gate-service
+     - passenger-service
+   image: putxander/api-gateway
+   ports:
+     - 8085:8085
+   links:
+     - airport-service
+     - flight-service
+     - gate-service
+     - passenger-service
+   environment:
+     AIRPORT_SERVICE_BASEURL: airport-service:8081
+     FLIGHT_SERVICE_BASEURL: flight-service:8082
+     GATE_SERVICE_BASEURL: gate-service:8083
+     PASSENGER_SERVICE_BASEURL: passenger-service:8084
 
 
 volumes:

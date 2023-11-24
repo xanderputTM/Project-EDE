@@ -1,5 +1,6 @@
 package fact.it.passengerservice.service;
 
+import fact.it.passengerservice.dto.FlightDto;
 import fact.it.passengerservice.dto.PassengerDto;
 import fact.it.passengerservice.dto.PersonDto;
 import fact.it.passengerservice.model.Passenger;
@@ -9,15 +10,23 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class PassengerService {
     private final PassengerRepository passengerRepository;
+
+    private final WebClient webClient;
+
+    @Value("${flightService.baseurl}")
+    private String flightServiceBaseUrl;
 
     @PostConstruct
     public void loadData() {
@@ -62,21 +71,54 @@ public class PassengerService {
                 .toList();
     }
 
-    public void createPassenger(PassengerDto passengerDto) {
-        Passenger passenger = mapToPassenger(passengerDto);
-        passengerRepository.save(passenger);
+    private boolean flightHasSpace(String flightNumber) {
+        FlightDto flightDto = webClient.get()
+                .uri("http://" + flightServiceBaseUrl + "/api/flight",
+                        uriBuilder -> uriBuilder.queryParam("flightNumber", flightNumber).build())
+                .retrieve()
+                .bodyToMono(FlightDto.class)
+                .block();
+
+        Integer capacity = flightDto.getCapacity();
+
+        if (getAllPassengersByFlightNumber(flightNumber).size() < capacity) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void updatePassenger(String pnrCode, PassengerDto passengerDto) {
+    public boolean createPassenger(PassengerDto passengerDto) {
+        if (flightHasSpace(passengerDto.getFlightNumber())) {
+            Passenger passenger = mapToPassenger(passengerDto);
+            passengerRepository.save(passenger);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean updatePassenger(String pnrCode, PassengerDto passengerDto) {
         Passenger oldPassenger =  passengerRepository.getByPnrCode(pnrCode);
         Passenger newPassenger = mapToPassenger(passengerDto);
-        Person newPerson = newPassenger.getPerson();
-        newPerson.setId(oldPassenger.getPerson().getId());
 
         newPassenger.setId(oldPassenger.getId());
+
+        Person newPerson = newPassenger.getPerson();
+        newPerson.setId(oldPassenger.getPerson().getId());
         newPassenger.setPerson(newPerson);
 
-        passengerRepository.save(newPassenger);
+
+        if (Objects.equals(oldPassenger.getFlightNumber(), newPassenger.getFlightNumber())) {
+            passengerRepository.save(newPassenger);
+            return true;
+        } else if (flightHasSpace(newPassenger.getFlightNumber())) {
+            passengerRepository.save(newPassenger);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     public void deleteAllPassengersByFlightNumber(String flightNumber) {
