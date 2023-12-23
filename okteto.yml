@@ -2,52 +2,6 @@ name: Project-EDE
 
 # The build section defines how to build the images of your development environment
 # More info: https://www.okteto.com/docs/reference/manifest/#build
-build:
-
-  # You can use the following env vars to refer to this image in your deploy commands:
-  #  - OKTETO_BUILD_AIRPORT_SERVICE_REGISTRY: image registry
-  #  - OKTETO_BUILD_AIRPORT_SERVICE_REPOSITORY: image repo
-  #  - OKTETO_BUILD_AIRPORT_SERVICE_IMAGE: image name
-  #  - OKTETO_BUILD_AIRPORT_SERVICE_SHA: image tag sha256
-  airport-service:
-    context: airport-service
-    dockerfile: airport-service\Dockerfile
-
-  # You can use the following env vars to refer to this image in your deploy commands:
-  #  - OKTETO_BUILD_API_GATEWAY_REGISTRY: image registry
-  #  - OKTETO_BUILD_API_GATEWAY_REPOSITORY: image repo
-  #  - OKTETO_BUILD_API_GATEWAY_IMAGE: image name
-  #  - OKTETO_BUILD_API_GATEWAY_SHA: image tag sha256
-  api-gateway:
-    context: api-gateway
-    dockerfile: api-gateway\Dockerfile
-
-  # You can use the following env vars to refer to this image in your deploy commands:
-  #  - OKTETO_BUILD_FLIGHT_SERVICE_REGISTRY: image registry
-  #  - OKTETO_BUILD_FLIGHT_SERVICE_REPOSITORY: image repo
-  #  - OKTETO_BUILD_FLIGHT_SERVICE_IMAGE: image name
-  #  - OKTETO_BUILD_FLIGHT_SERVICE_SHA: image tag sha256
-  flight-service:
-    context: flight-service
-    dockerfile: flight-service\Dockerfile
-
-  # You can use the following env vars to refer to this image in your deploy commands:
-  #  - OKTETO_BUILD_GATE_SERVICE_REGISTRY: image registry
-  #  - OKTETO_BUILD_GATE_SERVICE_REPOSITORY: image repo
-  #  - OKTETO_BUILD_GATE_SERVICE_IMAGE: image name
-  #  - OKTETO_BUILD_GATE_SERVICE_SHA: image tag sha256
-  gate-service:
-    context: gate-service
-    dockerfile: gate-service\Dockerfile
-
-  # You can use the following env vars to refer to this image in your deploy commands:
-  #  - OKTETO_BUILD_PASSENGER_SERVICE_REGISTRY: image registry
-  #  - OKTETO_BUILD_PASSENGER_SERVICE_REPOSITORY: image repo
-  #  - OKTETO_BUILD_PASSENGER_SERVICE_IMAGE: image name
-  #  - OKTETO_BUILD_PASSENGER_SERVICE_SHA: image tag sha256
-  passenger-service:
-    context: passenger-service
-    dockerfile: passenger-service\Dockerfile
 
 # The deploy section defines how to deploy your development environment
 # More info: https://www.okteto.com/docs/reference/manifest/#deploy
