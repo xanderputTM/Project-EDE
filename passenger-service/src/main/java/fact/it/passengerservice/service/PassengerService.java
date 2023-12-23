@@ -55,7 +55,7 @@ public class PassengerService {
             passenger2.setFlightNumber("2440");
             passenger2.setSeat("1F");
             passenger2.setPnrCode("234KGS");
-            passenger1.setPerson(person2);
+            passenger2.setPerson(person2);
 
             passengerRepository.save(passenger1);
             passengerRepository.save(passenger2);
