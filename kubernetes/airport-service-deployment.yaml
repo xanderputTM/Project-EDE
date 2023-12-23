@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose-windows-amd64.exe convert
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: airport-service
+  name: airport-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: airport-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose-windows-amd64.exe convert
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/temp-default: "true"
+        io.kompose.service: airport-service
+    spec:
+      containers:
+        - env:
+            - name: CURRENT_AIRPORT
+              value: BRU
+            - name: MONGODB_HOST
+              value: mongo-airport
+            - name: MONGODB_PORT
+              value: "27017"
+          image: putxander/airport-service
+          name: airport-service
+          ports:
+            - containerPort: 8081
+              hostPort: 8081
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+status: {}
