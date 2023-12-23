@@ -6,9 +6,22 @@ logging:
     root: INFO
     org.springframework.cloud.gateway: TRACE
     org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: INFO
-    reactor.netty: TRACE
+    reactor.netty: INFO
+    org.springframework.security: TRACE
 
 spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENTID}
+            client-secret: ${GOOGLE_CLIENTSECRET}
+            scope: openid,profile,email
+      resourceserver:
+        jwt:
+          issuer-uri: https://accounts.google.com
+          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
   cloud:
     gateway:
       routes:
@@ -25,7 +38,7 @@ spring:
             - Path=/flight
           filters:
             - SetPath=/api/flight
-        - id: flight-service-all
+        - id: flight-service-by-gate
           uri: http://${FLIGHT_SERVICE_BASEURL:localhost:8082}
           predicates:
             - Path=/gate/flights
