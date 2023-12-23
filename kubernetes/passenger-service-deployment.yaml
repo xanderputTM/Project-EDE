@@ -33,7 +33,7 @@ spec:
             - name: MYSQL_DB_PASSWORD
               value: abc123
             - name: MYSQL_DB_PORT
-              value: "3306"
+              value: "3308"
             - name: MYSQL_DB_USERNAME
               value: root
           image: putxander/passenger-service
