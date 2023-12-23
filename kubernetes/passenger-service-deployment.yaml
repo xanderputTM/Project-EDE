@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose-windows-amd64.exe convert
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: passenger-service
+  name: passenger-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: passenger-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose-windows-amd64.exe convert
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/temp-default: "true"
+        io.kompose.service: passenger-service
+    spec:
+      containers:
+        - env:
+            - name: FLIGHT_SERVICE_BASEURL
+              value: flight-service:8082
+            - name: MYSQL_DB_HOST
+              value: mysql-passenger
+            - name: MYSQL_DB_PASSWORD
+              value: abc123
+            - name: MYSQL_DB_PORT
+              value: "3306"
+            - name: MYSQL_DB_USERNAME
+              value: root
+          image: putxander/passenger-service
+          name: passenger-service
+          ports:
+            - containerPort: 8084
+              hostPort: 8084
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+status: {}

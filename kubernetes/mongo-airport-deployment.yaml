@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose-windows-amd64.exe convert
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongo-airport
+  name: mongo-airport
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mongo-airport
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose-windows-amd64.exe convert
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/temp-default: "true"
+        io.kompose.service: mongo-airport
+    spec:
+      containers:
+        - image: mongo:latest
+          name: mongo-airport
+          ports:
+            - containerPort: 27017
+              hostPort: 27017
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodb-airport-data
+      restartPolicy: Always
+      volumes:
+        - name: mongodb-airport-data
+          persistentVolumeClaim:
+            claimName: mongodb-airport-data
+status: {}

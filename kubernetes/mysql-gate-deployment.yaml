@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose-windows-amd64.exe convert
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mysql-gate
+  name: mysql-gate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mysql-gate
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose-windows-amd64.exe convert
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/temp-default: "true"
+        io.kompose.service: mysql-gate
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: abc123
+          image: mysql:latest
+          name: mysql-gate
+          ports:
+            - containerPort: 3306
+              hostPort: 3307
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-gate-data
+      restartPolicy: Always
+      volumes:
+        - name: mysql-gate-data
+          persistentVolumeClaim:
+            claimName: mysql-gate-data
+status: {}
