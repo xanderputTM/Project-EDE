@@ -12,10 +12,10 @@ management:
 logging:
   level:
     root: INFO
-    org.springframework.cloud.gateway: INFO
+    org.springframework.cloud.gateway: TRACE
     org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: INFO
     reactor.netty: INFO
-    org.springframework.security: INFO
+    org.springframework.security: TRACE
 
 spring:
   security:
@@ -79,3 +79,7 @@ spring:
             - Path=/flight/passengers
           filters:
             - SetPath=/api/passenger/flight
+        - id: api-gateway
+          uri: no://op
+          predicates:
+            - Path=/actuator/**

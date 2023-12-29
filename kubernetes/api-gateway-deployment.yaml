@@ -34,6 +34,8 @@ spec:
               value: gate-service:8083
             - name: PASSENGER_SERVICE_BASEURL
               value: passenger-service:8084
+            - name: API_GATEWAY_BASEURL
+              value: api-gateway:8085
           image: putxander/api-gateway
           name: api-gateway
           ports:
