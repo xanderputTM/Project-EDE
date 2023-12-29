@@ -16,3 +16,23 @@ data:
         static_configs:
           - targets: 
             - airport-service:8081
+      - job_name: 'flight-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: 
+            - flight-service:8082
+      - job_name: 'gate-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: 
+            - gate-service:8083
+      - job_name: 'passenger-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: 
+            - passenger-service:8084
+      - job_name: 'api-gateway'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: 
+            - api-gateway:8085
