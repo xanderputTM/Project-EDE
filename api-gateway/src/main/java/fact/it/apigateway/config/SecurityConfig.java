@@ -31,7 +31,7 @@ public class SecurityConfig {
                                 .pathMatchers(HttpMethod.GET,"/flight")
                                 .permitAll()
 
-                                .pathMatchers(HttpMethod.GET,"/actuator/prometheus")
+                                .pathMatchers("/actuator/**")
                                 .permitAll()
 
                                 // Other endpoints:  Authenticated only
