@@ -30,7 +30,7 @@ spec:
           name: prometheus
           args:
             - "--storage.tsdb.retention.time=12h"
-            # - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--config.file=/etc/prometheus/prometheus.yml"
             - "--storage.tsdb.path=/prometheus/"
           ports:
             - containerPort: 9090
@@ -38,11 +38,16 @@ spec:
               protocol: TCP
           resources: {}
           volumeMounts:
-            - mountPath: /prometheus
-              name: prometheus-storage-volume
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus/
+            - name: prometheus-storage-volume
+              mountPath: /prometheus/
       restartPolicy: Always
       volumes:
+        - name: prometheus-config-volume
+          configMap:
+            defaultMode: 420
+            name: prometheus-config-map
         - name: prometheus-storage-volume
-          persistentVolumeClaim:
-            claimName: prometheus-storage-volume
+          emptyDir: {}
 status: {}
