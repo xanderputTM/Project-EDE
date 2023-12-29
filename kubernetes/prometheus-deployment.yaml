@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose-windows-amd64.exe -f docker-compose.yml convert
+    kompose.cmd: kompose-windows-amd64.exe convert
     kompose.version: 1.31.2 (a92241f79)
   creationTimestamp: null
   labels:
@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose-windows-amd64.exe -f docker-compose.yml convert
+        kompose.cmd: kompose-windows-amd64.exe convert
         kompose.version: 1.31.2 (a92241f79)
       creationTimestamp: null
       labels:
@@ -34,11 +34,16 @@ spec:
               protocol: TCP
           resources: {}
           volumeMounts:
-            - mountPath: /etc/prometheus/prometheus.yml
-              name: prometheus-claim0
+            - mountPath: /prometheus
+              name: prometheus-storage-volume
+            - mountPath: /etc/prometheus
+              name: prometheus-config-volume
       restartPolicy: Always
       volumes:
-        - name: prometheus-claim0
+        - name: prometheus-storage-volume
           persistentVolumeClaim:
-            claimName: prometheus-claim0
+            claimName: prometheus-storage-volume
+        - name: prometheus-config-volume
+          persistentVolumeClaim:
+            claimName: prometheus-config-volume
 status: {}
