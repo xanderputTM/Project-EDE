@@ -5,6 +5,8 @@ metadata:
     kompose.cmd: kompose-windows-amd64.exe convert
     kompose.version: 1.31.2 (a92241f79)
     dev.okteto.com/auto-ingress: "true"
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9090"
   creationTimestamp: null
   labels:
     io.kompose.service: prometheus
