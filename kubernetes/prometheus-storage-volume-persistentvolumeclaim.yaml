@@ -3,8 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: prometheus-claim0
-  name: prometheus-claim0
+    io.kompose.service: prometheus-storage-volume
+  name: prometheus-storage-volume
 spec:
   accessModes:
     - ReadWriteOnce
