@@ -36,14 +36,9 @@ spec:
           volumeMounts:
             - mountPath: /prometheus
               name: prometheus-storage-volume
-            - mountPath: /etc/prometheus
-              name: prometheus-config-volume
       restartPolicy: Always
       volumes:
         - name: prometheus-storage-volume
           persistentVolumeClaim:
             claimName: prometheus-storage-volume
-        - name: prometheus-config-volume
-          persistentVolumeClaim:
-            claimName: prometheus-config-volume
 status: {}
