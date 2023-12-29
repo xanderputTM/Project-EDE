@@ -38,9 +38,6 @@ spec:
             - containerPort: 8081
               hostPort: 8081
               protocol: TCP
-            - containerPort: 8091
-              hostPort: 8091
-              protocol: TCP
           resources: {}
       restartPolicy: Always
 status: {}
