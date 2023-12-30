@@ -117,7 +117,6 @@ public class PassengerService {
 
     }
 
-    // TODO check seat not taken
     public ResponseEntity<Object> createPassenger(PassengerDto passengerDto) {
         if (passengerRepository.existsByPnrCode(passengerDto.getPnrCode())) {
             return new ResponseEntity<>("There is already a passenger with that pnr code!", HttpStatus.BAD_REQUEST);
@@ -138,6 +137,10 @@ public class PassengerService {
             return new ResponseEntity<>("Error!", HttpStatus.BAD_REQUEST);
         }
 
+        if (passengerRepository.existsByFlightNumberAndSeat(passengerDto.getFlightNumber(), passengerDto.getSeat())) {
+            return new ResponseEntity<>("The given seat is already occupied!", HttpStatus.BAD_REQUEST);
+        }
+
         ResponseEntity<Object> flightHasSpaceResponse = flightHasSpace(passengerDto.getFlightNumber());
         if (flightHasSpaceResponse.getStatusCode() != HttpStatus.OK) {
             return flightHasSpaceResponse;
@@ -152,7 +155,6 @@ public class PassengerService {
         }
     }
 
-    // TODO check seat not taken
     public ResponseEntity<Object> updatePassenger(String pnrCode, PassengerDto passengerDto) {
         Passenger oldPassenger =  passengerRepository.getByPnrCode(pnrCode);
         Passenger newPassenger = mapToPassenger(passengerDto);
@@ -187,6 +189,12 @@ public class PassengerService {
         ResponseEntity<Object> flightHasSpaceResponse = flightHasSpace(passengerDto.getFlightNumber());
         if (flightHasSpaceResponse.getStatusCode() != HttpStatus.OK) {
             return flightHasSpaceResponse;
+        }
+
+        if (!Objects.equals(newPassenger.getSeat(), oldPassenger.getSeat()) || !Objects.equals(newPassenger.getFlightNumber(), oldPassenger.getFlightNumber())) {
+            if (passengerRepository.existsByFlightNumberAndSeat(newPassenger.getFlightNumber(), newPassenger.getSeat())) {
+                return new ResponseEntity<>("The given seat is already occupied!", HttpStatus.BAD_REQUEST);
+            }
         }
 
 
