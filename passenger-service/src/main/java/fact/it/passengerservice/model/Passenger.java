@@ -13,7 +13,7 @@ import lombok.*;
 public class Passenger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
     private String pnrCode;
     private String seat;

@@ -9,6 +9,7 @@ import fact.it.passengerservice.repository.PassengerRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -21,8 +22,10 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Transactional
 public class PassengerService {
+    @Autowired
     private final PassengerRepository passengerRepository;
 
+    @Autowired
     private final WebClient webClient;
 
     @Value("${flightService.baseurl}")
@@ -55,7 +58,7 @@ public class PassengerService {
             passenger2.setFlightNumber("2440");
             passenger2.setSeat("1F");
             passenger2.setPnrCode("234KGS");
-            passenger1.setPerson(person2);
+            passenger2.setPerson(person2);
 
             passengerRepository.save(passenger1);
             passengerRepository.save(passenger2);
@@ -71,7 +74,7 @@ public class PassengerService {
                 .toList();
     }
 
-    private boolean flightHasSpace(String flightNumber) {
+    public boolean flightHasSpace(String flightNumber) {
         FlightDto flightDto = webClient.get()
                 .uri("http://" + flightServiceBaseUrl + "/api/flight",
                         uriBuilder -> uriBuilder.queryParam("flightNumber", flightNumber).build())
@@ -97,6 +100,7 @@ public class PassengerService {
             return false;
         }
     }
+
 
     public boolean updatePassenger(String pnrCode, PassengerDto passengerDto) {
         Passenger oldPassenger =  passengerRepository.getByPnrCode(pnrCode);
