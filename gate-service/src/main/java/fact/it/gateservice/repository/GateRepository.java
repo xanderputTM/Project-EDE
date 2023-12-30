@@ -9,6 +9,9 @@ import java.util.List;
 @Repository
 public interface GateRepository extends JpaRepository<Gate, Integer>{
     List<Gate> findAllByAirportCode(String airportCode);
+
+    Boolean existsByAirportCodeAndNumber(String airportCode, String gateNumber);
+
     Gate findByAirportCodeAndNumber(String airportCode, String gateNumber);
 
 }

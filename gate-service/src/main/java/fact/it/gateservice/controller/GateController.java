@@ -4,6 +4,7 @@ import fact.it.gateservice.dto.GateDto;
 import fact.it.gateservice.service.GateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +27,7 @@ public class GateController {
     }
 
     @GetMapping("/airport")
-    @ResponseStatus(HttpStatus.OK)
-    public GateDto getGateByAirportCodeAndGateNumber(@RequestParam String airportCode, @RequestParam String gateNumber) {
+    public ResponseEntity<Object> getGateByAirportCodeAndGateNumber(@RequestParam String airportCode, @RequestParam String gateNumber) {
         return gateService.getGateByAirportCodeAndGateNumber(airportCode, gateNumber);
     }
 }

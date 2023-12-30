@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config-map
+  labels:
+    name: prometheus-config-map
+data:
+  prometheus.rules:
+  prometheus.yml: |-
+    global:
+      scrape_interval: 5s
+      evaluation_interval: 5s
+    scrape_configs:
+      - job_name: 'airport-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: 
+            - airport-service:8081
+      - job_name: 'flight-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: 
+            - flight-service:8082
+      - job_name: 'gate-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: 
+            - gate-service:8083
+      - job_name: 'passenger-service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: 
+            - passenger-service:8084
+      - job_name: 'api-gateway'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: 
+            - api-gateway:8085

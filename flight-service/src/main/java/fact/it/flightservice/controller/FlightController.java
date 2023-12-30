@@ -4,6 +4,7 @@ import fact.it.flightservice.dto.FlightDto;
 import fact.it.flightservice.service.FlightService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +17,7 @@ public class FlightController {
     private final FlightService flightService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public FlightDto getFlightByFlightNumber(@RequestParam String flightNumber) {
+    public ResponseEntity<Object> getFlightByFlightNumber(@RequestParam String flightNumber) {
         return flightService.getFlightByFlightNumber(flightNumber);
     }
 
@@ -34,21 +34,18 @@ public class FlightController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void createFlight(@RequestBody FlightDto flightDto) {
-        flightService.createFlight(flightDto);
+    public ResponseEntity<Object> createFlight(@RequestBody FlightDto flightDto) {
+        return flightService.createFlight(flightDto);
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void updateFlight(@RequestParam String flightNumber, @RequestBody FlightDto flightDto) {
-        flightService.updateFlight(flightNumber, flightDto);
+    public ResponseEntity<Object> updateFlight(@RequestParam String flightNumber, @RequestBody FlightDto flightDto) {
+        return flightService.updateFlight(flightNumber, flightDto);
     }
 
     @DeleteMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteFlight(@RequestParam String flightNumber) {
-        flightService.deleteFlight(flightNumber);
+    public ResponseEntity<Object> deleteFlight(@RequestParam String flightNumber) {
+        return flightService.deleteFlight(flightNumber);
     }
 }
 

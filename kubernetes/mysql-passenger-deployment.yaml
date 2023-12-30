@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose-windows-amd64.exe convert
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mysql-passenger
+  name: mysql-passenger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mysql-passenger
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose-windows-amd64.exe convert
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/temp-default: "true"
+        io.kompose.service: mysql-passenger
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: abc123
+          image: mysql:latest
+          imagePullPolicy: Always
+          name: mysql-passenger
+          ports:
+            - containerPort: 3306
+              hostPort: 3308
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-passenger-data
+      restartPolicy: Always
+      volumes:
+        - name: mysql-passenger-data
+          persistentVolumeClaim:
+            claimName: mysql-passenger-data
+status: {}

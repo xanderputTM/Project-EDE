@@ -5,7 +5,10 @@ import fact.it.airportservice.model.Airport;
 import fact.it.airportservice.repository.AirportRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.function.EntityResponse;
 
 import java.util.List;
 
@@ -41,8 +44,12 @@ public class AirportService {
         return products.stream().map(this::mapToAirportResponse).toList();
     }
 
-    public AirportDto getAirportByCode(String code) {
-        return mapToAirportResponse(airportRepository.findByCode(code));
+    public ResponseEntity<Object> getAirportByCode(String code) {
+        if (!airportRepository.existsAirportByCode(code)) {
+            return new ResponseEntity<>("There is no airport with that code!", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(mapToAirportResponse(airportRepository.findByCode(code)), HttpStatus.OK);
     }
 
     private AirportDto mapToAirportResponse(Airport airport) {
@@ -53,6 +60,4 @@ public class AirportService {
                 .city(airport.getCity())
                 .build();
     }
-
-
 }

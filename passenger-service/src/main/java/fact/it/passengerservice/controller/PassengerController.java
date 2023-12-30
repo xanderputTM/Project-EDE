@@ -18,40 +18,31 @@ public class PassengerController {
     @GetMapping("/flight")
     @ResponseStatus(HttpStatus.OK)
     public List<PassengerDto> getAllPassengersByFlightNumber(@RequestParam String flightNumber) {
-        return passengerService.getAllPassengersByFlightNumber(flightNumber);
+        return passengerService.getAllPassengerDtosByFlightNumber(flightNumber);
     }
 
     @PostMapping
-    public ResponseEntity<String> createPassenger(@RequestBody PassengerDto passengerDto) {
-        boolean result = passengerService.createPassenger(passengerDto);
-
-        if (result) {
-            return new ResponseEntity<>("Passenger created successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Passenger creation failed", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Object> createPassenger(@RequestBody PassengerDto passengerDto) {
+        return passengerService.createPassenger(passengerDto);
     }
 
     @PutMapping
-    public ResponseEntity<String> updatePassenger(@RequestParam String pnrCode, @RequestBody PassengerDto passengerDto) {
-        boolean result = passengerService.updatePassenger(pnrCode, passengerDto);
+    public ResponseEntity<Object> updatePassenger(@RequestParam String pnrCode, @RequestBody PassengerDto passengerDto) {
+        return passengerService.updatePassenger(pnrCode, passengerDto);
+    }
 
-        if (result) {
-            return new ResponseEntity<>("Passenger updated successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Passenger updating failed", HttpStatus.BAD_REQUEST);
-        }
+    @PutMapping("/flight")
+    public ResponseEntity<Object> updateFlightNumberPassengers(@RequestParam String oldFlightNumber, @RequestParam String newFlightNumber) {
+        return passengerService.updateFlightNumberPassengers(oldFlightNumber, newFlightNumber);
     }
 
     @DeleteMapping("/flight")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteAllPassengersByFlightNumber(@RequestParam String flightNumber) {
-        passengerService.deleteAllPassengersByFlightNumber(flightNumber);
+    public ResponseEntity<Object> deleteAllPassengersByFlightNumber(@RequestParam String flightNumber) {
+        return passengerService.deleteAllPassengersByFlightNumber(flightNumber);
     }
 
     @DeleteMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void deletePassengerByPnrCode(@RequestParam String pnrCode) {
-        passengerService.deletePassengerByPnrCode(pnrCode);
+    public ResponseEntity<Object> deletePassengerByPnrCode(@RequestParam String pnrCode) {
+        return passengerService.deletePassengerByPnrCode(pnrCode);
     }
 }

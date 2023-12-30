@@ -1,13 +1,21 @@
 server:
   port: 8085
 
+management:
+  server:
+    port: 8085
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
 logging:
   level:
     root: INFO
-    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.gateway: INFO
     org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: INFO
     reactor.netty: INFO
-    org.springframework.security: TRACE
+    org.springframework.security: INFO
 
 spring:
   security:
@@ -25,49 +33,82 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: airport-service
+        - id: get-all-airports
+          uri: http://${AIRPORT_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/airports
+            - Method=GET
+          filters:
+            - SetPath=/api/airport/all
+        - id: get-airport-by-code
           uri: http://${AIRPORT_SERVICE_BASEURL:localhost:8081}
           predicates:
             - Path=/airport
             - Method=GET
           filters:
             - SetPath=/api/airport
+
+
+        - id: get-all-flights
+          uri: http://${FLIGHT_SERVICE_BASEURL:localhost:8082}
+          predicates:
+            - Path=/flights
+            - Method=GET
+          filters:
+            - SetPath=/api/flight/all
         - id: flight-service
           uri: http://${FLIGHT_SERVICE_BASEURL:localhost:8082}
           predicates:
             - Path=/flight
           filters:
             - SetPath=/api/flight
-        - id: flight-service-by-gate
+        - id: get-flights-by-gate-number
           uri: http://${FLIGHT_SERVICE_BASEURL:localhost:8082}
           predicates:
             - Path=/gate/flights
             - Method=GET
           filters:
             - SetPath=/api/flight/gate
-        - id: gate-service-by-airport-code
+
+
+        - id: get-all-gates
+          uri: http://${GATE_SERVICE_BASEURL:localhost:8083}
+          predicates:
+            - Path=/gates
+            - Method=GET
+          filters:
+            - SetPath=/api/gate/all
+        - id: get-gates-by-airport-code
           uri: http://${GATE_SERVICE_BASEURL:localhost:8083}
           predicates:
             - Path=/airport/gates
             - Method=GET
           filters:
             - SetPath=/api/gate/airport/all
-        - id: gate-service-by-airport-and-gate-number
+        - id: get-gate-by-airport-code-and-gate-number
           uri: http://${GATE_SERVICE_BASEURL:localhost:8083}
           predicates:
             - Path=/airport/gate
             - Method=GET
           filters:
             - SetPath=/api/gate/airport
+
+
         - id: passenger-service
           uri: http://${PASSENGER_SERVICE_BASEURL:localhost:8084}
           predicates:
             - Path=/passenger
           filters:
             - SetPath=/api/passenger
-        - id: passenger-service-flight
+        - id: passengers-by-flight-number
           uri: http://${PASSENGER_SERVICE_BASEURL:localhost:8084}
           predicates:
             - Path=/flight/passengers
           filters:
             - SetPath=/api/passenger/flight
+
+
+        - id: api-gateway
+          uri: no://op
+          predicates:
+            - Path=/actuator/**

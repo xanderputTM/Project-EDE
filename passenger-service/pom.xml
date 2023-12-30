@@ -56,6 +56,13 @@
 			<artifactId>spring-test</artifactId>
 			<version>5.1.2.RELEASE</version>
 			<scope>test</scope>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<scope>runtime</scope>
 		</dependency>
     </dependencies>
 

@@ -10,6 +10,9 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -60,12 +63,27 @@ public class PassengerService {
             passenger2.setPnrCode("234KGS");
             passenger2.setPerson(person2);
 
+
+            Person person3 = new Person();
+            person3.setBirthDate(new Date());
+            person3.setFirstName("Dirk");
+            person3.setLastName("Jenkins");
+            person3.setNationality("Belgium");
+
+            Passenger passenger3 = new Passenger();
+            passenger3.setHasCheckedIn(true);
+            passenger3.setFlightNumber("2280");
+            passenger3.setSeat("32A");
+            passenger3.setPnrCode("QSGD");
+            passenger3.setPerson(person3);
+
             passengerRepository.save(passenger1);
             passengerRepository.save(passenger2);
+            passengerRepository.save(passenger3);
         }
     }
 
-    public List<PassengerDto> getAllPassengersByFlightNumber(String flightNumber) {
+    public List<PassengerDto> getAllPassengerDtosByFlightNumber(String flightNumber) {
         List<Passenger> passengers = passengerRepository.findByFlightNumber(flightNumber);
 
         return passengers
@@ -74,35 +92,82 @@ public class PassengerService {
                 .toList();
     }
 
-    public boolean flightHasSpace(String flightNumber) {
-        FlightDto flightDto = webClient.get()
-                .uri("http://" + flightServiceBaseUrl + "/api/flight",
-                        uriBuilder -> uriBuilder.queryParam("flightNumber", flightNumber).build())
-                .retrieve()
-                .bodyToMono(FlightDto.class)
-                .block();
 
-        Integer capacity = flightDto.getCapacity();
+    public List<Passenger> getAllPassengersByFlightNumber(String flightNumber) {
+        List<Passenger> passengers = passengerRepository.findByFlightNumber(flightNumber);
 
-        if (getAllPassengersByFlightNumber(flightNumber).size() < capacity) {
-            return true;
-        } else {
-            return false;
-        }
+        return passengers;
     }
 
-    public boolean createPassenger(PassengerDto passengerDto) {
-        if (flightHasSpace(passengerDto.getFlightNumber())) {
+    public ResponseEntity<Object> flightHasSpace(String flightNumber) {
+        try {
+            ResponseEntity<FlightDto> flightResponse = webClient.get()
+                    .uri("http://" + flightServiceBaseUrl + "/api/flight",
+                            uriBuilder -> uriBuilder.queryParam("flightNumber", flightNumber).build())
+                    .retrieve()
+                    .toEntity(FlightDto.class)
+                    .block();
+
+            if (flightResponse != null && flightResponse.getStatusCode() != HttpStatus.OK) {
+                return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
+            }
+
+            if (flightResponse == null || flightResponse.getBody() == null) {
+                return new ResponseEntity<>("Error!", HttpStatus.BAD_REQUEST);
+            }
+
+            Integer capacity = flightResponse.getBody().getCapacity();
+            Boolean hasSpace = capacity > getAllPassengersByFlightNumber(flightNumber).size();
+
+            return new ResponseEntity<>(hasSpace, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
+        }
+
+
+
+    }
+
+    public ResponseEntity<Object> createPassenger(PassengerDto passengerDto) {
+        if (passengerRepository.existsByPnrCode(passengerDto.getPnrCode())) {
+            return new ResponseEntity<>("There is already a passenger with that pnr code!", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            ResponseEntity<FlightDto> flightResponse = webClient.get()
+                    .uri("http://" + flightServiceBaseUrl + "/api/flight",
+                            uriBuilder -> uriBuilder.queryParam("flightNumber", passengerDto.getFlightNumber()).build())
+                    .retrieve()
+                    .toEntity(FlightDto.class)
+                    .block();
+
+            if (flightResponse != null && flightResponse.getStatusCode() != HttpStatus.OK) {
+                return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
+        }
+
+        if (passengerRepository.existsByFlightNumberAndSeat(passengerDto.getFlightNumber(), passengerDto.getSeat())) {
+            return new ResponseEntity<>("The given seat is already occupied!", HttpStatus.BAD_REQUEST);
+        }
+
+        ResponseEntity<Object> flightHasSpaceResponse = flightHasSpace(passengerDto.getFlightNumber());
+        if (flightHasSpaceResponse.getStatusCode() != HttpStatus.OK) {
+            return flightHasSpaceResponse;
+        }
+
+        if (flightHasSpaceResponse.getBody() != null && (Boolean) flightHasSpaceResponse.getBody()) {
             Passenger passenger = mapToPassenger(passengerDto);
             passengerRepository.save(passenger);
-            return true;
+            return new ResponseEntity<>(passenger, HttpStatus.OK);
         } else {
-            return false;
+            return new ResponseEntity<>("There is no space remaining on the given flight!", HttpStatus.BAD_REQUEST);
         }
     }
 
 
-    public boolean updatePassenger(String pnrCode, PassengerDto passengerDto) {
+    public ResponseEntity<Object> updatePassenger(String pnrCode, PassengerDto passengerDto) {
         Passenger oldPassenger =  passengerRepository.getByPnrCode(pnrCode);
         Passenger newPassenger = mapToPassenger(passengerDto);
 
@@ -112,25 +177,78 @@ public class PassengerService {
         newPerson.setId(oldPassenger.getPerson().getId());
         newPassenger.setPerson(newPerson);
 
+        if (!Objects.equals(pnrCode, newPassenger.getPnrCode())) {
+            if (passengerRepository.existsByPnrCode(newPassenger.getPnrCode())) {
+                return new ResponseEntity<>("There is already a passenger with that pnr code!", HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        try {
+            ResponseEntity<FlightDto> flightResponse = webClient.get()
+                    .uri("http://" + flightServiceBaseUrl + "/api/flight",
+                            uriBuilder -> uriBuilder.queryParam("flightNumber", passengerDto.getFlightNumber()).build())
+                    .retrieve()
+                    .toEntity(FlightDto.class)
+                    .block();
+
+            if (flightResponse != null && flightResponse.getStatusCode() != HttpStatus.OK) {
+                return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
+        }
+
+        ResponseEntity<Object> flightHasSpaceResponse = flightHasSpace(passengerDto.getFlightNumber());
+        if (flightHasSpaceResponse.getStatusCode() != HttpStatus.OK) {
+            return flightHasSpaceResponse;
+        }
+
+        if (!Objects.equals(newPassenger.getSeat(), oldPassenger.getSeat()) || !Objects.equals(newPassenger.getFlightNumber(), oldPassenger.getFlightNumber())) {
+            if (passengerRepository.existsByFlightNumberAndSeat(newPassenger.getFlightNumber(), newPassenger.getSeat())) {
+                return new ResponseEntity<>("The given seat is already occupied!", HttpStatus.BAD_REQUEST);
+            }
+        }
+
 
         if (Objects.equals(oldPassenger.getFlightNumber(), newPassenger.getFlightNumber())) {
             passengerRepository.save(newPassenger);
-            return true;
-        } else if (flightHasSpace(newPassenger.getFlightNumber())) {
+            return new ResponseEntity<>(newPassenger, HttpStatus.OK);
+        } else if (flightHasSpaceResponse.getBody() != null && (Boolean) flightHasSpaceResponse.getBody()) {
             passengerRepository.save(newPassenger);
-            return true;
+            return new ResponseEntity<>(newPassenger, HttpStatus.OK);
         } else {
-            return false;
+            return new ResponseEntity<>("There is no space remaining on the given flight!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public ResponseEntity<Object> deleteAllPassengersByFlightNumber(String flightNumber) {
+        if (!passengerRepository.existsByFlightNumber(flightNumber)) {
+            return new ResponseEntity<>("There are no passengers with that flight number!", HttpStatus.OK);
         }
 
-    }
-
-    public void deleteAllPassengersByFlightNumber(String flightNumber) {
         passengerRepository.deleteAllByFlightNumber(flightNumber);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
-    public void deletePassengerByPnrCode(String pnrCode) {
+    public ResponseEntity<Object> deletePassengerByPnrCode(String pnrCode) {
+        if (!passengerRepository.existsByPnrCode(pnrCode)) {
+            return new ResponseEntity<>("There is no passenger with that pnr code!", HttpStatus.BAD_REQUEST);
+        }
+
         passengerRepository.deleteByPnrCode(pnrCode);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> updateFlightNumberPassengers(String oldFlightNumber, String newFlightNumber) {
+        List<Passenger> passengersToChange = getAllPassengersByFlightNumber(oldFlightNumber);
+
+        passengersToChange.forEach(passenger -> {
+            passenger.setFlightNumber(newFlightNumber);
+        });
+
+        passengerRepository.saveAll(passengersToChange);
+        return new ResponseEntity<>("Passengers updated successfully", HttpStatus.OK);
     }
 
     private PassengerDto mapToPassengerDto(Passenger passenger) {
@@ -170,4 +288,6 @@ public class PassengerService {
                 .birthDate(personDto.getBirthDate())
                 .build();
     }
+
+
 }

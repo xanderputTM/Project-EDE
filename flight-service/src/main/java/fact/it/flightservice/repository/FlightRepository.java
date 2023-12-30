@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface FlightRepository extends JpaRepository<Flight, Integer>{
     Flight getFlightByFlightNumber(String flightNumber);
+    Boolean existsFlightByFlightNumber(String flightNumber);
     List<Flight> getFlightsByGateNumber(String gateNumber);
     void deleteByFlightNumber(String flightNumber);
 }
