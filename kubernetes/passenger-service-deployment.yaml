@@ -37,6 +37,7 @@ spec:
             - name: MYSQL_DB_USERNAME
               value: root
           image: putxander/passenger-service
+          imagePullPolicy: Always
           name: passenger-service
           ports:
             - containerPort: 8084
