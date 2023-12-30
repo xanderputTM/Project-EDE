@@ -98,18 +98,23 @@ public class FlightService {
         newFlight.setId(oldFlight.getId());
 
         if (!Objects.equals(oldFlight.getCapacity(), newFlight.getCapacity())) {
-            PassengerDto[] passengers = webClient.get()
-                    .uri("http://" + passengerServiceBaseUrl + "/api/passenger/flight",
-                            uriBuilder -> uriBuilder
-                                    .queryParam("flightNumber", flightNumber )
-                                    .build())
-                    .retrieve()
-                    .bodyToMono(PassengerDto[].class)
-                    .block();
+            try {
+                PassengerDto[] passengers = webClient.get()
+                        .uri("http://" + passengerServiceBaseUrl + "/api/passenger/flight",
+                                uriBuilder -> uriBuilder
+                                        .queryParam("flightNumber", flightNumber )
+                                        .build())
+                        .retrieve()
+                        .bodyToMono(PassengerDto[].class)
+                        .block();
 
-            if (passengers == null || passengers.length > flightDto.getCapacity()) {
-                return new ResponseEntity<>("Capacity is below current amount of passengers!", HttpStatus.BAD_REQUEST);
+                if (passengers == null || passengers.length > flightDto.getCapacity()) {
+                    return new ResponseEntity<>("Capacity is below current amount of passengers!", HttpStatus.BAD_REQUEST);
+                }
+            } catch (Exception e) {
+                return new ResponseEntity<>("Error!", HttpStatus.BAD_REQUEST);
             }
+
         }
 
         if (!Objects.equals(flightNumber, newFlight.getFlightNumber())) {
@@ -117,18 +122,23 @@ public class FlightService {
                 return new ResponseEntity<>("There is already a flight with that flight number!", HttpStatus.BAD_REQUEST);
             }
 
-            ResponseEntity<String> result = webClient.put()
-                .uri("http://" + passengerServiceBaseUrl + "/api/passenger/flight",
-                        uriBuilder -> uriBuilder
-                                .queryParam("oldFlightNumber", flightNumber )
-                                .queryParam("newFlightNumber", flightDto.getFlightNumber() )
-                                .build())
-                .retrieve().toEntity(String.class)
-                .block();
+            try {
+                ResponseEntity<String> result = webClient.put()
+                        .uri("http://" + passengerServiceBaseUrl + "/api/passenger/flight",
+                                uriBuilder -> uriBuilder
+                                        .queryParam("oldFlightNumber", flightNumber )
+                                        .queryParam("newFlightNumber", flightDto.getFlightNumber() )
+                                        .build())
+                        .retrieve().toEntity(String.class)
+                        .block();
 
-            if (result != null && result.getStatusCode() != HttpStatus.OK) {
-                return new ResponseEntity<>("Error updating flight number of existing passengers. Flight has not been updated.", HttpStatus.BAD_REQUEST);
+                if (result != null && result.getStatusCode() != HttpStatus.OK) {
+                    return new ResponseEntity<>("Error updating flight number of existing passengers. Flight has not been updated.", HttpStatus.BAD_REQUEST);
+                }
+            } catch (Exception e) {
+                return new ResponseEntity<>("Error!", HttpStatus.BAD_REQUEST);
             }
+
         }
 
         flightRepository.save(newFlight);
