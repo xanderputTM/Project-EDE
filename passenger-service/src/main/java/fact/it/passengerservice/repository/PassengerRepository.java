@@ -10,6 +10,7 @@ import java.util.List;
 public interface PassengerRepository extends JpaRepository<Passenger, Integer> {
     List<Passenger> findByFlightNumber(String flightNumber);
     Boolean existsByFlightNumber(String flightNumber);
+    Boolean existsByFlightNumberAndSeat(String flightNumber, String seat);
     Boolean existsByPnrCode(String pnrCode);
     Passenger getByPnrCode(String pnrCode);
     void deleteAllByFlightNumber(String flightNumber);
