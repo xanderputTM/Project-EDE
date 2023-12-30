@@ -34,7 +34,7 @@ spec:
               value: "3307"
             - name: MYSQL_DB_USERNAME
               value: root
-          image: putxander/gate-service
+          image: putxander/gate-service:latest
           imagePullPolicy: Always
           name: gate-service
           ports:

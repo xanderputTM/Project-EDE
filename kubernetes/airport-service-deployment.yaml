@@ -32,7 +32,7 @@ spec:
               value: mongo-airport
             - name: MONGODB_PORT
               value: "27017"
-          image: putxander/airport-service
+          image: putxander/airport-service:latest
           name: airport-service
           imagePullPolicy: Always
           ports:
