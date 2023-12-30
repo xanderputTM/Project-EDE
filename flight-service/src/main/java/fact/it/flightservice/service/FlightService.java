@@ -113,17 +113,17 @@ public class FlightService {
         }
 
         if (!Objects.equals(flightNumber, newFlight.getFlightNumber())) {
-            if (flightRepository.existsFlightByFlightNumber(flightDto.getFlightNumber())) {
+            if (flightRepository.existsFlightByFlightNumber(newFlight.getFlightNumber())) {
                 return new ResponseEntity<>("There is already a flight with that flight number!", HttpStatus.BAD_REQUEST);
             }
 
-            ResponseEntity<Object> result = webClient.put()
+            ResponseEntity<String> result = webClient.put()
                 .uri("http://" + passengerServiceBaseUrl + "/api/passenger/flight",
                         uriBuilder -> uriBuilder
                                 .queryParam("oldFlightNumber", flightNumber )
                                 .queryParam("newFlightNumber", flightDto.getFlightNumber() )
                                 .build())
-                .retrieve().toEntity(Object.class)
+                .retrieve().toEntity(String.class)
                 .block();
 
             if (result != null && result.getStatusCode() != HttpStatus.OK) {
