@@ -237,8 +237,8 @@ public class PassengerService {
     public ResponseEntity<Object> updateFlightNumberPassengers(String oldFlightNumber, String newFlightNumber) {
         List<Passenger> passengersToChange = getAllPassengersByFlightNumber(oldFlightNumber);
 
-        passengersToChange.forEach(passengerDto -> {
-            passengerDto.setFlightNumber(newFlightNumber);
+        passengersToChange.forEach(passenger -> {
+            passenger.setFlightNumber(newFlightNumber);
         });
 
         passengerRepository.saveAll(passengersToChange);
