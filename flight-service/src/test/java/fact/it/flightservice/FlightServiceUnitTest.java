@@ -122,9 +122,9 @@ public class FlightServiceUnitTest {
         flight.setCapacity(2);
 
         when(flightRepository.getFlightByFlightNumber("2280")).thenReturn(flight);
-
+        when(flightRepository.existsFlightByFlightNumber("2280")).thenReturn(true);
         // Act
-        FlightDto flightDto = flightService.getFlightByFlightNumber("2280");
+        FlightDto flightDto = (FlightDto) flightService.getFlightByFlightNumber("2280").getBody();
 
         // Assert
         assertEquals("2280", flight.getFlightNumber());
