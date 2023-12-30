@@ -79,13 +79,19 @@ public class PassengerService {
         }
     }
 
-    public List<PassengerDto> getAllPassengersByFlightNumber(String flightNumber) {
+    public List<PassengerDto> getAllPassengerDtosByFlightNumber(String flightNumber) {
         List<Passenger> passengers = passengerRepository.findByFlightNumber(flightNumber);
 
         return passengers
                 .stream()
                 .map(this::mapToPassengerDto)
                 .toList();
+    }
+
+    public List<Passenger> getAllPassengersByFlightNumber(String flightNumber) {
+        List<Passenger> passengers = passengerRepository.findByFlightNumber(flightNumber);
+
+        return passengers;
     }
 
     public ResponseEntity<Object> flightHasSpace(String flightNumber) {
@@ -110,7 +116,7 @@ public class PassengerService {
 
             return new ResponseEntity<>(hasSpace, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Error!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
         }
 
 
@@ -134,7 +140,7 @@ public class PassengerService {
                 return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Error!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
         }
 
         if (passengerRepository.existsByFlightNumberAndSeat(passengerDto.getFlightNumber(), passengerDto.getSeat())) {
@@ -183,7 +189,7 @@ public class PassengerService {
                 return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("Error!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
         }
 
         ResponseEntity<Object> flightHasSpaceResponse = flightHasSpace(passengerDto.getFlightNumber());
@@ -229,10 +235,7 @@ public class PassengerService {
     }
 
     public ResponseEntity<Object> updateFlightNumberPassengers(String oldFlightNumber, String newFlightNumber) {
-        List<Passenger> passengersToChange = getAllPassengersByFlightNumber(oldFlightNumber)
-                .stream()
-                .map(this::mapToPassenger)
-                .toList();
+        List<Passenger> passengersToChange = getAllPassengersByFlightNumber(oldFlightNumber);
 
         passengersToChange.forEach(passengerDto -> {
             passengerDto.setFlightNumber(newFlightNumber);

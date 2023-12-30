@@ -18,7 +18,7 @@ public class PassengerController {
     @GetMapping("/flight")
     @ResponseStatus(HttpStatus.OK)
     public List<PassengerDto> getAllPassengersByFlightNumber(@RequestParam String flightNumber) {
-        return passengerService.getAllPassengersByFlightNumber(flightNumber);
+        return passengerService.getAllPassengerDtosByFlightNumber(flightNumber);
     }
 
     @PostMapping
