@@ -107,7 +107,7 @@ public class FlightService {
                     .bodyToMono(PassengerDto[].class)
                     .block();
 
-            if (passengers == null || passengers.length < flightDto.getCapacity()) {
+            if (passengers == null || passengers.length > flightDto.getCapacity()) {
                 return new ResponseEntity<>("Capacity is below current amount of passengers!", HttpStatus.BAD_REQUEST);
             }
         }
