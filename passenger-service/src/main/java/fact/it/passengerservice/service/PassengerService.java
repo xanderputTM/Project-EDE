@@ -9,6 +9,7 @@ import fact.it.passengerservice.repository.PassengerRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,10 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Transactional
 public class PassengerService {
+    @Autowired
     private final PassengerRepository passengerRepository;
 
+    @Autowired
     private final WebClient webClient;
 
     @Value("${flightService.baseurl}")
@@ -60,6 +63,7 @@ public class PassengerService {
             passenger2.setPnrCode("234KGS");
             passenger2.setPerson(person2);
 
+
             Person person3 = new Person();
             person3.setBirthDate(new Date());
             person3.setFirstName("Dirk");
@@ -87,6 +91,7 @@ public class PassengerService {
                 .map(this::mapToPassengerDto)
                 .toList();
     }
+
 
     public List<Passenger> getAllPassengersByFlightNumber(String flightNumber) {
         List<Passenger> passengers = passengerRepository.findByFlightNumber(flightNumber);
@@ -160,6 +165,7 @@ public class PassengerService {
             return new ResponseEntity<>("There is no space remaining on the given flight!", HttpStatus.BAD_REQUEST);
         }
     }
+
 
     public ResponseEntity<Object> updatePassenger(String pnrCode, PassengerDto passengerDto) {
         Passenger oldPassenger =  passengerRepository.getByPnrCode(pnrCode);
