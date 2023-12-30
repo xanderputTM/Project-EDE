@@ -13,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -71,7 +73,7 @@ public class PassengerServiceUnitTest {
         when(passengerRepository.findByFlightNumber("2280")).thenReturn(Arrays.asList(passenger));
 
         // Act
-        List<PassengerDto> passengers = passengerService.getAllPassengersByFlightNumber("2280");
+        List<Passenger> passengers = passengerService.getAllPassengersByFlightNumber("2280");
 
 
         // Assert
@@ -125,10 +127,11 @@ public class PassengerServiceUnitTest {
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(anyString(),  any(Function.class))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(FlightDto.class)).thenReturn(Mono.just(flightDto));
+        ResponseEntity<FlightDto> response = new ResponseEntity<>(flightDto, HttpStatus.OK);
+        when(responseSpec.toEntity(FlightDto.class)).thenReturn(Mono.just(response));
 
         // Act
-        boolean result = passengerService.flightHasSpace(flightDto.getFlightNumber());
+        boolean result = (boolean) passengerService.flightHasSpace(flightDto.getFlightNumber()).getBody();
 
         // Assert
         assertTrue(result);
@@ -170,13 +173,15 @@ public class PassengerServiceUnitTest {
 
         when(passengerRepository.findByFlightNumber(flightDto.getFlightNumber())).thenReturn(Arrays.asList(passenger1, passenger2));
 
+
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(anyString(),  any(Function.class))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(FlightDto.class)).thenReturn(Mono.just(flightDto));
+        ResponseEntity<FlightDto> response = new ResponseEntity<>(flightDto, HttpStatus.OK);
+        when(responseSpec.toEntity(FlightDto.class)).thenReturn(Mono.just(response));
 
         // Act
-        boolean result = passengerService.flightHasSpace(flightDto.getFlightNumber());
+        boolean result = (boolean) passengerService.flightHasSpace(flightDto.getFlightNumber()).getBody();
 
         // Assert
         assertFalse(result);

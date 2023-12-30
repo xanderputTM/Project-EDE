@@ -76,9 +76,10 @@ public class GateServiceUnitTest {
         gate.setAirportCode("G0331");
 
         when(gateRepository.findByAirportCodeAndNumber("G0331", "2")).thenReturn(gate);
+        when(gateRepository.existsByAirportCodeAndNumber("G0331", "2")).thenReturn(true);
 
         // Act
-        GateDto gateDto = gateService.getGateByAirportCodeAndGateNumber("G0331", "2");
+        GateDto gateDto = (GateDto) gateService.getGateByAirportCodeAndGateNumber("G0331", "2").getBody();
 
         // Assert
         assertEquals("G0331", gate.getAirportCode());

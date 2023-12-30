@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.Console;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,9 +62,10 @@ public class AirportServiceUnitTest {
         airport.setCountry("Belgium");
 
         when(airportRepository.findByCode("M2450")).thenReturn(airport);
+        when(airportRepository.existsAirportByCode("M2450")).thenReturn(true);
 
         // Act
-        AirportDto airportDto = airportService.getAirportByCode("M2450");
+        AirportDto airportDto = (AirportDto) airportService.getAirportByCode("M2450").getBody();
 
         // Assert
         assertEquals("Test airport", airport.getName());
