@@ -27,6 +27,7 @@ spec:
     spec:
       containers:
         - image: prom/prometheus
+          imagePullPolicy: Always
           name: prometheus
           args:
             - "--storage.tsdb.retention.time=12h"

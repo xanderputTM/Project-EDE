@@ -34,6 +34,7 @@ spec:
               value: "27017"
           image: putxander/airport-service
           name: airport-service
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
               hostPort: 8081

@@ -30,6 +30,7 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               value: abc123
           image: mysql:latest
+          imagePullPolicy: Always
           name: mysql-flight
           ports:
             - containerPort: 3306

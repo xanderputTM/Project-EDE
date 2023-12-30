@@ -40,6 +40,8 @@ public class FlightService {
             flight1.setScheduledTime(new Date());
             flight1.setRegistrationNumber("SX-BHR");
             flight1.setCapacity(2);
+            flightRepository.save(flight1);
+
 
             Flight flight2 = new Flight();
             flight2.setFlightNumber("2440");
@@ -49,8 +51,6 @@ public class FlightService {
             flight2.setScheduledTime(new Date());
             flight2.setRegistrationNumber("MV-TTT");
             flight2.setCapacity(3);
-
-            flightRepository.save(flight1);
             flightRepository.save(flight2);
         }
     }

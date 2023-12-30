@@ -37,6 +37,7 @@ spec:
             - name: MYSQL_DB_USERNAME
               value: root
           image: putxander/flight-service
+          imagePullPolicy: Always
           name: flight-service
           ports:
             - containerPort: 8082
