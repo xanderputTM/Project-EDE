@@ -4,7 +4,9 @@ import fact.it.airportservice.dto.AirportDto;
 import fact.it.airportservice.service.AirportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.function.EntityResponse;
 
 import java.util.List;
 
@@ -22,8 +24,7 @@ public class AirportController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public AirportDto getAirportByCode(@RequestParam String code) {
+    public ResponseEntity<Object> getAirportByCode(@RequestParam String code) {
         return airportService.getAirportByCode(code);
     }
 }

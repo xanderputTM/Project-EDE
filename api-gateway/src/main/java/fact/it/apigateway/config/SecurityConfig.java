@@ -19,16 +19,28 @@ public class SecurityConfig {
                 .authorizeExchange(exchange ->
                         exchange
                                 // Allow all
+                                .pathMatchers(HttpMethod.GET,"/airports")
+                                .permitAll()
+
                                 .pathMatchers(HttpMethod.GET,"/airport")
                                 .permitAll()
 
-                                .pathMatchers(HttpMethod.GET,"/airport/gates")
+                                .pathMatchers(HttpMethod.GET,"/flights")
+                                .permitAll()
+
+                                .pathMatchers(HttpMethod.GET,"/flight")
                                 .permitAll()
 
                                 .pathMatchers(HttpMethod.GET,"/gate/flights")
                                 .permitAll()
 
-                                .pathMatchers(HttpMethod.GET,"/flight")
+                                .pathMatchers(HttpMethod.GET,"/gates")
+                                .permitAll()
+
+                                .pathMatchers(HttpMethod.GET,"/airport/gates")
+                                .permitAll()
+
+                                .pathMatchers(HttpMethod.GET,"/airport/gate")
                                 .permitAll()
 
                                 .pathMatchers("/actuator/**")

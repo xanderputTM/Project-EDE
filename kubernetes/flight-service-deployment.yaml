@@ -26,6 +26,8 @@ spec:
     spec:
       containers:
         - env:
+            - name: PASSENGER_SERVICE_BASEURL
+              value: passenger-service:8084
             - name: MYSQL_DB_HOST
               value: mysql-flight
             - name: MYSQL_DB_PASSWORD
