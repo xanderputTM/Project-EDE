@@ -36,7 +36,7 @@ spec:
               value: "3308"
             - name: MYSQL_DB_USERNAME
               value: root
-          image: putxander/passenger-service
+          image: putxander/passenger-service:latest
           imagePullPolicy: Always
           name: passenger-service
           ports:

@@ -36,7 +36,7 @@ spec:
               value: passenger-service:8084
             - name: API_GATEWAY_BASEURL
               value: api-gateway:8085
-          image: putxander/api-gateway
+          image: putxander/api-gateway:latest
           imagePullPolicy: Always
           name: api-gateway
           ports:
