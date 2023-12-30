@@ -48,7 +48,7 @@ public class FlightService {
             flight2.setRemoteAirportCode("G0331");
             flight2.setScheduledTime(new Date());
             flight2.setRegistrationNumber("MV-TTT");
-            flight1.setCapacity(3);
+            flight2.setCapacity(3);
 
             flightRepository.save(flight1);
             flightRepository.save(flight2);
