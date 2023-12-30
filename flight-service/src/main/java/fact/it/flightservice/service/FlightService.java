@@ -136,7 +136,7 @@ public class FlightService {
                     return new ResponseEntity<>("Error updating flight number of existing passengers. Flight has not been updated.", HttpStatus.BAD_REQUEST);
                 }
             } catch (Exception e) {
-                return new ResponseEntity<>("Error!", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Error updating flight number of existing passengers. Flight has not been updated.", HttpStatus.BAD_REQUEST);
             }
 
         }
