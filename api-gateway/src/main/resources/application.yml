@@ -12,10 +12,10 @@ management:
 logging:
   level:
     root: INFO
-    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.gateway: INFO
     org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: INFO
     reactor.netty: INFO
-    org.springframework.security: TRACE
+    org.springframework.security: INFO
 
 spring:
   security:
