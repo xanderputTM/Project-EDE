@@ -9,12 +9,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.io.Console;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -75,4 +78,33 @@ public class AirportServiceUnitTest {
 
         verify(airportRepository, times(1)).findByCode(airportDto.getCode());
     }
+
+    @Test
+    public void getAirportByCode_CodeDoesNotExist() {
+        // Arrange
+        Airport airport = new Airport();
+        airport.setId("1");
+        airport.setName("Test airport");
+        airport.setCity("Merret");
+        airport.setCode("M2450");
+        airport.setCountry("Belgium");
+
+        when(airportRepository.existsAirportByCode("TEST")).thenReturn(false);
+
+        // Act
+        ResponseEntity<Object> responseEntity = airportService.getAirportByCode("TEST");
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+        Object responseBody = responseEntity.getBody();
+        assertTrue(responseBody instanceof String);
+
+        String errorMessage = (String) responseBody;
+        assertEquals("There is no airport with that code!", errorMessage);
+
+        verify(airportRepository, times(0)).findByCode("TEST");
+        verify(airportRepository, times(1)).existsAirportByCode("TEST");
+    }
+
 }
