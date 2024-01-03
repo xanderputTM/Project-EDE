@@ -2,6 +2,7 @@ package fact.it.passengerservice;
 
 import fact.it.passengerservice.dto.FlightDto;
 import fact.it.passengerservice.dto.PassengerDto;
+import fact.it.passengerservice.dto.PersonDto;
 import fact.it.passengerservice.model.Passenger;
 import fact.it.passengerservice.model.Person;
 import fact.it.passengerservice.repository.PassengerRepository;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.util.ReflectionTestUtils.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PassengerServiceUnitTest {
@@ -51,7 +54,7 @@ public class PassengerServiceUnitTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(passengerService, "flightServiceBaseUrl", "http://localhost:8082");
+        setField(passengerService, "flightServiceBaseUrl", "http://localhost:8082");
     }
 
     @Test
@@ -87,7 +90,47 @@ public class PassengerServiceUnitTest {
     }
 
 
-    // TODO: tests van passenger nog fiksen
+//    @Test
+//    public void testGetAllPassengerDtosByFlightNumber() throws Exception {
+//        // Arrange
+//        PassengerService passengerServiceSpy = PowerMockito.spy(new YourPassengerService());
+//
+//        Person person = new Person();
+//        person.setBirthDate(new Date());
+//        person.setFirstName("Joe");
+//        person.setLastName("Jenkins");
+//        person.setNationality("Belgium");
+//
+//        Passenger passenger = new Passenger();
+//        passenger.setHasCheckedIn(true);
+//        passenger.setFlightNumber("2280");
+//        passenger.setSeat("1E");
+//        passenger.setPnrCode("123ABC");
+//        passenger.setPerson(person);
+//
+//        when(passengerRepository.findByFlightNumber("2280")).thenReturn(Arrays.asList(passenger));
+//
+//        // Mock the behavior of mapToPersonDto
+//        PersonDto expectedPersonDto = new PersonDto("Joe", "Jenkins", "Belgium", new Date());
+//        PowerMockito.doReturn(expectedPersonDto).when(passengerServiceSpy, "mapToPersonDto", any(Person.class));
+//
+//        // Act
+//        List<PassengerDto> passengerDtos = passengerServiceSpy.getAllPassengerDtosByFlightNumber("2280");
+//
+//        // Assert
+//        assertEquals(1, passengerDtos.size());
+//        assertEquals("2280", passengerDtos.get(0).getFlightNumber());
+//        assertEquals("1E", passengerDtos.get(0).getSeat());
+//        assertEquals("123ABC", passengerDtos.get(0).getPnrCode());
+//        assertEquals(expectedPersonDto, passengerDtos.get(0).getPerson());
+//
+//        verify(passengerRepository, times(1)).findByFlightNumber(passenger.getFlightNumber());
+//    }
+
+
+
+
+    //TODO: tests van passenger nog fiksen
 
     @Test
     public void testFlightHasSpaceReturnsTrue() {
