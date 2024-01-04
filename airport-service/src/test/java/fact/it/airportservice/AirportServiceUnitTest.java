@@ -30,7 +30,7 @@ public class AirportServiceUnitTest {
     private AirportRepository airportRepository;
 
     @Test
-    public void  testGetAllAirports() {
+    public void testGetAllAirports() {
         // Arrange
         Airport airport = new Airport();
         airport.setId("1");
@@ -39,12 +39,14 @@ public class AirportServiceUnitTest {
         airport.setCode("M2450");
         airport.setCountry("Belgium");
 
+
         when(airportRepository.findAll()).thenReturn(Arrays.asList(airport));
 
         // Act
         List<AirportDto> airports = airportService.getAllAirports();
 
         // Assert
+        assertTrue(airports != null);
         assertEquals(1, airports.size());
         assertEquals("Test airport", airports.get(0).getName());
         assertEquals("Merret", airports.get(0).getCity());
@@ -55,7 +57,7 @@ public class AirportServiceUnitTest {
     }
 
     @Test
-    public void getAirportByCode() {
+    public void testGetAirportByCode_AirportFound() {
         // Arrange
         Airport airport = new Airport();
         airport.setId("1");
@@ -77,10 +79,11 @@ public class AirportServiceUnitTest {
         assertEquals("Belgium", airport.getCountry());
 
         verify(airportRepository, times(1)).findByCode(airportDto.getCode());
+        verify(airportRepository, times(1)).existsAirportByCode(airportDto.getCode());
     }
 
     @Test
-    public void getAirportByCode_CodeDoesNotExist() {
+    public void testGetAirportByCode_CodeDoesNotExist() {
         // Arrange
         Airport airport = new Airport();
         airport.setId("1");
@@ -103,7 +106,7 @@ public class AirportServiceUnitTest {
         String errorMessage = (String) responseBody;
         assertEquals("There is no airport with that code!", errorMessage);
 
-        verify(airportRepository, times(0)).findByCode("TEST");
+        verify(airportRepository, never()).findByCode(anyString());
         verify(airportRepository, times(1)).existsAirportByCode("TEST");
     }
 
