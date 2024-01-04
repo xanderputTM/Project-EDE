@@ -39,9 +39,9 @@ public class AirportService {
     }
 
     public List<AirportDto> getAllAirports() {
-        List<Airport> products = airportRepository.findAll();
+        List<Airport> airports = airportRepository.findAll();
 
-        return products.stream().map(this::mapToAirportResponse).toList();
+        return airports.stream().map(this::mapToAirportResponse).toList();
     }
 
     public ResponseEntity<Object> getAirportByCode(String code) {

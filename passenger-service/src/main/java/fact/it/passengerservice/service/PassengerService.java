@@ -112,12 +112,9 @@ public class PassengerService {
                 return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
             }
 
-            if (flightResponse == null || flightResponse.getBody() == null) {
-                return new ResponseEntity<>("Error!", HttpStatus.BAD_REQUEST);
-            }
-
             Integer capacity = flightResponse.getBody().getCapacity();
-            Boolean hasSpace = capacity > getAllPassengersByFlightNumber(flightNumber).size();
+            List<Passenger> passengers = passengerRepository.findByFlightNumber(flightNumber);
+            Boolean hasSpace = capacity > passengers.size();
 
             return new ResponseEntity<>(hasSpace, HttpStatus.OK);
         } catch (Exception e) {
@@ -160,7 +157,7 @@ public class PassengerService {
         if (flightHasSpaceResponse.getBody() != null && (Boolean) flightHasSpaceResponse.getBody()) {
             Passenger passenger = mapToPassenger(passengerDto);
             passengerRepository.save(passenger);
-            return new ResponseEntity<>(passenger, HttpStatus.OK);
+            return new ResponseEntity<>(mapToPassengerDto(passenger), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("There is no space remaining on the given flight!", HttpStatus.BAD_REQUEST);
         }
@@ -212,10 +209,10 @@ public class PassengerService {
 
         if (Objects.equals(oldPassenger.getFlightNumber(), newPassenger.getFlightNumber())) {
             passengerRepository.save(newPassenger);
-            return new ResponseEntity<>(newPassenger, HttpStatus.OK);
+            return new ResponseEntity<>(mapToPassengerDto(newPassenger), HttpStatus.OK);
         } else if (flightHasSpaceResponse.getBody() != null && (Boolean) flightHasSpaceResponse.getBody()) {
             passengerRepository.save(newPassenger);
-            return new ResponseEntity<>(newPassenger, HttpStatus.OK);
+            return new ResponseEntity<>(mapToPassengerDto(newPassenger), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("There is no space remaining on the given flight!", HttpStatus.BAD_REQUEST);
         }
@@ -241,7 +238,7 @@ public class PassengerService {
     }
 
     public ResponseEntity<Object> updateFlightNumberPassengers(String oldFlightNumber, String newFlightNumber) {
-        List<Passenger> passengersToChange = getAllPassengersByFlightNumber(oldFlightNumber);
+        List<Passenger> passengersToChange = passengerRepository.findByFlightNumber(oldFlightNumber);
 
         passengersToChange.forEach(passenger -> {
             passenger.setFlightNumber(newFlightNumber);

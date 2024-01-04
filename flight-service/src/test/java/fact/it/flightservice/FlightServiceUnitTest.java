@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientException;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -53,54 +55,7 @@ public class FlightServiceUnitTest {
     void setUp() {
         ReflectionTestUtils.setField(flightService, "passengerServiceBaseUrl", "http://localhost:8084");
     }
-    @Test
-    public void testCreateFlight() {
-        // Arrange
-        Date currentDate = new Date();
 
-        FlightDto flightDto = new FlightDto();
-        flightDto.setFlightNumber("2280");
-        flightDto.setDepartingFlight(true);
-        flightDto.setRemoteAirportCode("G0331");
-        flightDto.setScheduledTime(currentDate);
-        flightDto.setGateNumber("12");
-        flightDto.setRegistrationNumber("SX-BHR");
-        flightDto.setCapacity(2);
-
-        // Act
-        flightService.createFlight(flightDto);
-
-        // Assert
-        verify(flightRepository, times(1)).save(any(Flight.class));
-    }
-
-    @Test
-    public void testCreateFlight_FlightAlreadyExists() {
-        // Arrange
-        Date currentDate = new Date();
-
-        FlightDto flightDto = new FlightDto();
-        flightDto.setFlightNumber("2280");
-        flightDto.setDepartingFlight(true);
-        flightDto.setRemoteAirportCode("G0331");
-        flightDto.setScheduledTime(currentDate);
-        flightDto.setGateNumber("12");
-        flightDto.setRegistrationNumber("SX-BHR");
-        flightDto.setCapacity(2);
-
-        // Mocking: Flight with the same flight number already exists
-        when(flightRepository.existsFlightByFlightNumber("2280")).thenReturn(true);
-
-        // Act
-        ResponseEntity<Object> responseEntity = flightService.createFlight(flightDto);
-
-        // Assert
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertEquals("There is already a flight with that flight number!", responseEntity.getBody());
-
-        verify(flightRepository, times(0)).save(any(Flight.class));  // Ensure that save is not called
-        verify(flightRepository, times(1)).existsFlightByFlightNumber("2280");  // Verify existence check
-    }
 
     @Test
     public void testGetAllFlights() {
@@ -130,6 +85,7 @@ public class FlightServiceUnitTest {
 
         verify(flightRepository, times(1)).findAll();
     }
+
     @Test
     public void testGetFlightByFlightNumber() {
         // Arrange
@@ -155,6 +111,7 @@ public class FlightServiceUnitTest {
         assertEquals("SX-BHR", flight.getRegistrationNumber());
         assertEquals(2, flight.getCapacity());
 
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(flight.getFlightNumber());
         verify(flightRepository, times(1)).getFlightByFlightNumber(flight.getFlightNumber());
     }
 
@@ -185,7 +142,7 @@ public class FlightServiceUnitTest {
         String errorMessage = (String) responseBody;
         assertEquals("There is no flight with that flight number!", errorMessage);
 
-        verify(flightRepository, times(0)).getFlightByFlightNumber("8888");  // Correct flight number in verification
+        verify(flightRepository, never()).getFlightByFlightNumber("8888");  // Correct flight number in verification
         verify(flightRepository, times(1)).existsFlightByFlightNumber("8888");  // Verify existence check
     }
 
@@ -218,6 +175,60 @@ public class FlightServiceUnitTest {
 
         verify(flightRepository, times(1)).getFlightsByGateNumber(flight.getGateNumber());
     }
+
+    @Test
+    public void testCreateFlight() {
+        // Arrange
+        Date currentDate = new Date();
+
+        FlightDto flightDto = new FlightDto();
+        flightDto.setFlightNumber("2280");
+        flightDto.setDepartingFlight(true);
+        flightDto.setRemoteAirportCode("G0331");
+        flightDto.setScheduledTime(currentDate);
+        flightDto.setGateNumber("12");
+        flightDto.setRegistrationNumber("SX-BHR");
+        flightDto.setCapacity(2);
+
+        when(flightRepository.existsFlightByFlightNumber(anyString())).thenReturn(false);
+
+        // Act
+        flightService.createFlight(flightDto);
+
+        // Assert
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(any());
+        verify(flightRepository, times(1)).save(any(Flight.class));
+    }
+
+    @Test
+    public void testCreateFlight_FlightAlreadyExists() {
+        // Arrange
+        Date currentDate = new Date();
+
+        FlightDto flightDto = new FlightDto();
+        flightDto.setFlightNumber("2280");
+        flightDto.setDepartingFlight(true);
+        flightDto.setRemoteAirportCode("G0331");
+        flightDto.setScheduledTime(currentDate);
+        flightDto.setGateNumber("12");
+        flightDto.setRegistrationNumber("SX-BHR");
+        flightDto.setCapacity(2);
+
+        // Mocking: Flight with the same flight number already exists
+        when(flightRepository.existsFlightByFlightNumber("2280")).thenReturn(true);
+
+        // Act
+        ResponseEntity<Object> responseEntity = flightService.createFlight(flightDto);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals("There is already a flight with that flight number!", responseEntity.getBody());
+
+        verify(flightRepository, never()).save(any(Flight.class));  // Ensure that save is not called
+        verify(flightRepository, times(1)).existsFlightByFlightNumber("2280");  // Verify existence check
+    }
+
+
     @Test
     public void testUpdateFlight_Successful() {
         // Arrange
@@ -259,9 +270,11 @@ public class FlightServiceUnitTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         // Verify
+        verify(flightRepository, times(2)).existsFlightByFlightNumber(any());
+        verify(flightRepository, times(1)).getFlightByFlightNumber(any());
         verify(flightRepository, times(1)).save(any(Flight.class));
+        verify(webClient, times(1)).get();
         verify(webClient, times(1)).put(); // Only invoked if flight number is different
-        verify(responseSpec, times(1)).toEntity(String.class); // Only invoked if flight number is different
     }
 
     @Test
@@ -278,6 +291,7 @@ public class FlightServiceUnitTest {
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals("There is no flight with that flight number!", responseEntity.getBody());
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(any());
         verify(flightRepository, never()).getFlightByFlightNumber(anyString());
         verify(flightRepository, never()).save(any(Flight.class));
         verify(webClient, never()).get();
@@ -318,12 +332,127 @@ public class FlightServiceUnitTest {
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals("Capacity is below current amount of passengers!", responseEntity.getBody());
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(any());
+        verify(flightRepository, times(1)).getFlightByFlightNumber(anyString());
+        verify(flightRepository, never()).save(any(Flight.class));
+        verify(webClient, times(1)).get();
+        verify(webClient, never()).put();
+    }
+
+    @Test
+    public void testUpdateFlight_GetPassengersError() {
+        // Arrange
+        Flight oldFlight = new Flight();
+        oldFlight.setId(1);
+        String oldFlightNumber = "123";
+        Integer oldCapacity = 5;
+        oldFlight.setFlightNumber(oldFlightNumber);
+        oldFlight.setCapacity(oldCapacity);
+
+        FlightDto flightDto = new FlightDto();
+        String newFlightNumber = "1234";
+        Integer newCapacity = 1;
+        flightDto.setFlightNumber(newFlightNumber);
+        flightDto.setCapacity(newCapacity);
+
+        when(flightRepository.existsFlightByFlightNumber(oldFlightNumber)).thenReturn(true);
+        when(flightRepository.getFlightByFlightNumber(oldFlightNumber)).thenReturn(oldFlight);
+
+        // Mock the WebClient response for passenger retrieval
+        when(webClient.get()).thenThrow(WebClientResponseException.class);
+
+        // Act
+        ResponseEntity<Object> responseEntity = flightService.updateFlight(oldFlightNumber, flightDto);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals("Error!", responseEntity.getBody());
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(oldFlightNumber);
+        verify(flightRepository, never()).existsFlightByFlightNumber(newFlightNumber);
+        verify(flightRepository, times(1)).getFlightByFlightNumber(oldFlightNumber);
         verify(flightRepository, never()).save(any(Flight.class));
         verify(webClient, times(1)).get();
         verify(webClient, never()).put();
     }
 
 
+    @Test
+    public void testUpdateFlight_UpdatePassengersFailed() {
+        // Arrange
+        Flight oldFlight = new Flight();
+        oldFlight.setId(1);
+        String oldFlightNumber = "123";
+        Integer oldCapacity = 5;
+        oldFlight.setFlightNumber(oldFlightNumber);
+        oldFlight.setCapacity(oldCapacity);
+
+        FlightDto flightDto = new FlightDto();
+        String newFlightNumber = "1234";
+        Integer newCapacity = 5;
+        flightDto.setFlightNumber(newFlightNumber);
+        flightDto.setCapacity(newCapacity);
+
+        when(flightRepository.existsFlightByFlightNumber(oldFlightNumber)).thenReturn(true);
+        when(flightRepository.getFlightByFlightNumber(oldFlightNumber)).thenReturn(oldFlight);
+        when(flightRepository.existsFlightByFlightNumber(newFlightNumber)).thenReturn(false);
+
+        // Mock the WebClient response for passenger retrieval
+        when(webClient.put()).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(anyString(), any(Function.class))).thenReturn(requestBodySpec);
+        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+        ResponseEntity<String> response = new ResponseEntity<>("Some error", HttpStatus.BAD_REQUEST);
+        when(responseSpec.toEntity(String.class)).thenReturn(Mono.just(response));
+
+        // Act
+        ResponseEntity<Object> responseEntity = flightService.updateFlight(oldFlightNumber, flightDto);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals("Error updating flight number of existing passengers. Flight has not been updated.", responseEntity.getBody());
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(oldFlightNumber);
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(newFlightNumber);
+        verify(flightRepository, times(1)).getFlightByFlightNumber(oldFlightNumber);
+        verify(flightRepository, never()).save(any(Flight.class));
+        verify(webClient, never()).get();
+        verify(webClient, times(1)).put();
+    }
+
+    @Test
+    public void testUpdateFlight_UpdatePassengersError() {
+        // Arrange
+        Flight oldFlight = new Flight();
+        oldFlight.setId(1);
+        String oldFlightNumber = "123";
+        Integer oldCapacity = 5;
+        oldFlight.setFlightNumber(oldFlightNumber);
+        oldFlight.setCapacity(oldCapacity);
+
+        FlightDto flightDto = new FlightDto();
+        String newFlightNumber = "1234";
+        Integer newCapacity = 5;
+        flightDto.setFlightNumber(newFlightNumber);
+        flightDto.setCapacity(newCapacity);
+
+        when(flightRepository.existsFlightByFlightNumber(oldFlightNumber)).thenReturn(true);
+        when(flightRepository.getFlightByFlightNumber(oldFlightNumber)).thenReturn(oldFlight);
+        when(flightRepository.existsFlightByFlightNumber(newFlightNumber)).thenReturn(false);
+
+        // Mock the WebClient response for passenger retrieval
+        when(webClient.put()).thenThrow(WebClientResponseException.class);
+
+        // Act
+        ResponseEntity<Object> responseEntity = flightService.updateFlight(oldFlightNumber, flightDto);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals("Error updating flight number of existing passengers. Flight has not been updated.", responseEntity.getBody());
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(oldFlightNumber);
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(newFlightNumber);
+        verify(flightRepository, times(1)).getFlightByFlightNumber(oldFlightNumber);
+        verify(flightRepository, never()).save(any(Flight.class));
+        verify(webClient, never()).get();
+        verify(webClient, times(1)).put();
+    }
 
     @Test
     public void testUpdateFlight_DuplicateFlightNumber() {
@@ -358,6 +487,9 @@ public class FlightServiceUnitTest {
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals("There is already a flight with that flight number!", responseEntity.getBody());
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(firstFlightNumber);
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(secondFlightNumber);
+        verify(flightRepository, times(1)).getFlightByFlightNumber(firstFlightNumber);
         verify(flightRepository, never()).save(any(Flight.class));
         verify(webClient, never()).get();
         verify(webClient, never()).put();
@@ -394,6 +526,7 @@ public class FlightServiceUnitTest {
 
         // Verify
         verify(webClient, times(1)).delete();
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(flightNumber);
         verify(flightRepository, times(1)).deleteByFlightNumber(flightNumber);
     }
 
@@ -412,42 +545,45 @@ public class FlightServiceUnitTest {
         assertEquals("There is no flight with that flight number!", responseEntity.getBody());
 
         // Verify
-        verify(flightRepository, times(0)).deleteByFlightNumber(any());
-        verify(webClient, times(0)).delete();
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(flightNumber);
+        verify(flightRepository, never()).deleteByFlightNumber(any());
+        verify(webClient, never()).delete();
     }
 
-    //TODO: deze test nakijken
-//    @Test
-//    public void testDeleteFlight_ErrorDeletingPassengers() {
-//        // Arrange
-//        String flightNumber = "123";
-//
-//        // Mock the Flight
-//        Flight mockFlight = new Flight();
-//        mockFlight.setId(1);
-//        mockFlight.setFlightNumber(flightNumber);
-//        mockFlight.setCapacity(5);
-//
-//        when(flightRepository.existsFlightByFlightNumber(flightNumber)).thenReturn(true);
-//
-//        // Mock the WebClient response for passenger deletion
-//        when(webClient.delete()).thenReturn(requestHeadersUriSpec);
-//        when(requestHeadersUriSpec.uri(anyString(), any(Function.class))).thenReturn(requestBodySpec);
-//        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
-//
-//        // Simulate an error response from the WebClient
-//        when(responseSpec.toEntity(Void.class)).thenReturn(Mono.error(new RuntimeException("Simulated error")));
-//
-//        // Act
-//        ResponseEntity<Object> responseEntity = flightService.deleteFlight(flightNumber);
-//
-//        // Assert
-//        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-//        assertEquals("Error deleting passengers.", responseEntity.getBody());
-//
-//        // Verify
-//        verify(webClient, times(1)).delete();
-//        verify(flightRepository, never()).deleteByFlightNumber(any());
-//    }
+    @Test
+    public void testDeleteFlight_ErrorDeletingPassengers() {
+        // Arrange
+        String flightNumber = "123";
+
+        // Mock the Flight
+        Flight mockFlight = new Flight();
+        mockFlight.setId(1);
+        mockFlight.setFlightNumber(flightNumber);
+        mockFlight.setCapacity(5);
+
+        when(flightRepository.existsFlightByFlightNumber(flightNumber)).thenReturn(true);
+
+        // Mock the WebClient response for passenger deletion
+        when(webClient.delete()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(anyString(), any(Function.class))).thenReturn(requestBodySpec);
+        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+
+        // Simulate an error response from the WebClient
+        ResponseEntity<Void> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        when(responseSpec.toEntity(Void.class)).thenReturn(Mono.just(response));
+
+        // Act
+        ResponseEntity<Object> responseEntity = flightService.deleteFlight(flightNumber);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals("Error deleting passengers.", responseEntity.getBody());
+
+        // Verify
+        verify(flightRepository, times(1)).existsFlightByFlightNumber(any());
+        verify(webClient, times(1)).delete();
+        verify(flightRepository, never()).deleteByFlightNumber(any());
+    }
 
 }
