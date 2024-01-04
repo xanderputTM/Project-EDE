@@ -142,7 +142,7 @@ public class FlightServiceUnitTest {
         String errorMessage = (String) responseBody;
         assertEquals("There is no flight with that flight number!", errorMessage);
 
-        verify(flightRepository, times(0)).getFlightByFlightNumber("8888");  // Correct flight number in verification
+        verify(flightRepository, never()).getFlightByFlightNumber("8888");  // Correct flight number in verification
         verify(flightRepository, times(1)).existsFlightByFlightNumber("8888");  // Verify existence check
     }
 
@@ -224,7 +224,7 @@ public class FlightServiceUnitTest {
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals("There is already a flight with that flight number!", responseEntity.getBody());
 
-        verify(flightRepository, times(0)).save(any(Flight.class));  // Ensure that save is not called
+        verify(flightRepository, never()).save(any(Flight.class));  // Ensure that save is not called
         verify(flightRepository, times(1)).existsFlightByFlightNumber("2280");  // Verify existence check
     }
 
@@ -546,8 +546,8 @@ public class FlightServiceUnitTest {
 
         // Verify
         verify(flightRepository, times(1)).existsFlightByFlightNumber(flightNumber);
-        verify(flightRepository, times(0)).deleteByFlightNumber(any());
-        verify(webClient, times(0)).delete();
+        verify(flightRepository, never()).deleteByFlightNumber(any());
+        verify(webClient, never()).delete();
     }
 
     @Test

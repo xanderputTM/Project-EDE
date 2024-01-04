@@ -654,7 +654,7 @@ public class PassengerServiceUnitTest {
 
         verify(passengerRepository, times(1)).getByPnrCode(anyString());
         verify(passengerRepository, times(1)).existsByPnrCode(anyString());
-        verify(passengerRepository, times(0)).existsByFlightNumberAndSeat(anyString(), anyString());
+        verify(passengerRepository, never()).existsByFlightNumberAndSeat(anyString(), anyString());
         verify(passengerRepository, never()).save(any());
     }
 
@@ -703,7 +703,7 @@ public class PassengerServiceUnitTest {
 
         verify(passengerRepository, times(1)).getByPnrCode(anyString());
         verify(passengerRepository, times(1)).existsByPnrCode(anyString());
-        verify(passengerRepository, times(0)).existsByFlightNumberAndSeat(anyString(), anyString());
+        verify(passengerRepository, never()).existsByFlightNumberAndSeat(anyString(), anyString());
         verify(passengerRepository, never()).save(any());
     }
 
@@ -748,7 +748,7 @@ public class PassengerServiceUnitTest {
 
         verify(passengerRepository, times(1)).getByPnrCode(anyString());
         verify(passengerRepository, times(1)).existsByPnrCode(anyString());
-        verify(passengerRepository, times(0)).existsByFlightNumberAndSeat(anyString(), anyString());
+        verify(passengerRepository, never()).existsByFlightNumberAndSeat(anyString(), anyString());
         verify(passengerRepository, never()).save(any());
     }
 
@@ -800,7 +800,7 @@ public class PassengerServiceUnitTest {
 
         verify(passengerRepository, times(1)).getByPnrCode(anyString());
         verify(passengerRepository, times(1)).existsByPnrCode(anyString());
-        verify(passengerRepository, times(0)).existsByFlightNumberAndSeat(anyString(), anyString());
+        verify(passengerRepository, never()).existsByFlightNumberAndSeat(anyString(), anyString());
         verify(passengerRepository, never()).save(any());
     }
 
@@ -969,7 +969,7 @@ public class PassengerServiceUnitTest {
         verify(passengerRepository, times(1)).getByPnrCode(anyString());
         verify(passengerRepository, times(1)).existsByPnrCode(anyString());
         verify(passengerRepository, times(1)).existsByFlightNumberAndSeat(anyString(), anyString());
-        verify(passengerRepository, times(0)).save(any());
+        verify(passengerRepository, never()).save(any());
     }
 
     @Test
@@ -1001,7 +1001,7 @@ public class PassengerServiceUnitTest {
         assertEquals(response.getBody(), "There are no passengers with that flight number!");
 
         verify(passengerRepository, times(1)).existsByFlightNumber(any());
-        verify(passengerRepository, times(0)).deleteAllByFlightNumber(any());
+        verify(passengerRepository, never()).deleteAllByFlightNumber(any());
     }
     @Test
     public void testDeletePassengerByPnrCode_Exists() {
@@ -1033,7 +1033,7 @@ public class PassengerServiceUnitTest {
         assertEquals(response.getBody(), "There is no passenger with that pnr code!");
 
         verify(passengerRepository, times(1)).existsByPnrCode(any());
-        verify(passengerRepository, times(0)).deleteByPnrCode(any());
+        verify(passengerRepository, never()).deleteByPnrCode(any());
     }
 
     @Test
