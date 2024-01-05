@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -39,7 +39,8 @@ export class DataService {
 
   // Passengers
   getPassengersByFlightNumber(flightNumber: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/flight/passengers?flightNumber=${flightNumber}`)
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${sessionStorage.getItem("loggedInUser")}` });
+    return this.http.get(`${this.apiUrl}/flight/passengers?flightNumber=${flightNumber}`, { headers })
   }
 
   createPassenger(passengerData: any): Observable<any> {
