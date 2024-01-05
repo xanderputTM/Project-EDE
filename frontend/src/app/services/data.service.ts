@@ -7,26 +7,46 @@ import { Observable } from 'rxjs';
 })
 export class DataService {
 
-  private apiUrl = 'http://localhost:8085/api';  // Aanpassen aan jouw API Gateway URL
+  private apiUrl = 'https://api-gateway-xanderputtm.cloud.okteto.net';
 
   constructor(private http: HttpClient) {}
 
+  // Airports
   getAllAirports(): Observable<any> {
     return this.http.get(`${this.apiUrl}/airports`);
   }
   getAirportByCode(airportCode : string): Observable<any> {
-    return this.http.get(`${this.apiUrl}?code=${airportCode}`)
+    return this.http.get(`${this.apiUrl}/airport?code=${airportCode}`)
   }
 
+  // Flights
   getAllFlights(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/api/flight/all`);
+    return this.http.get(`${this.apiUrl}/flights`);
   }
 
   createFlight(flightData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/flight`, flightData);
+    return this.http.post(`${this.apiUrl}/flight`, flightData);
   }
 
   deleteFlight(flightId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/api/flight/${flightId}`);
+    return this.http.delete(`${this.apiUrl}/flight/${flightId}`);
+  }
+
+  // Gates
+  getAllGates(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/gates`);
+  }
+
+  // Passengers
+  getPassengersByFlightNumber(flightNumber: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/flight/passengers?flightNumber=${flightNumber}`)
+  }
+
+  createPassenger(passengerData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/api/passenger`, passengerData);
+  }
+
+  deletePassenger(passengerId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/api/passenger/${passengerId}`);
   }
 }

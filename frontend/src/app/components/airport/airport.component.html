@@ -1,0 +1,18 @@
+<table class="flight-table">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Code</th>
+    <th>Country</th>
+    <th>City</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let airports of airports">
+    <td>{{ airports.name }}</td>
+    <td>{{ airports.code }}</td>
+    <td>{{ airports.country }}</td>
+    <td>{{ airports.city }}</td>
+  </tbody>
+</table>
+
