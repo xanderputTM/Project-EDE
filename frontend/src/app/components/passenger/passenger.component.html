@@ -1,1 +1,27 @@
-<p>passenger works!</p>
+<div class="flight-container">
+  <label for="flightNumber">Select Flight Number:</label>
+  <select id="flightNumber" [(ngModel)]="selectedFlightNumber" (change)="getPassengersByFlightNumber(selectedFlightNumber)">
+    <option *ngFor="let flight of flights" [value]="flight.flightNumber">{{ flight.flightNumber }}</option>
+  </select>
+</div>
+
+<div class="table-container">
+  <table class="flight-table">
+    <thead>
+    <tr>
+      <th>PNR code</th>
+      <th>Seat</th>
+      <th>Checked in</th>
+      <th>Flight number</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let passenger of passengers">
+      <td>{{ passenger.pnrCode }}</td>
+      <td>{{ passenger.seat }}</td>
+      <td>{{ passenger.hasCheckedIn }}</td>
+      <td>{{ passenger.flightNumber }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

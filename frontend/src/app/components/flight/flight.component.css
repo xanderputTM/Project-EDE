@@ -1,0 +1,19 @@
+.table-container {
+  margin: 20px;
+}
+
+.flight-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.flight-table th, .flight-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.flight-table th {
+  background-color: #f2f2f2;
+}

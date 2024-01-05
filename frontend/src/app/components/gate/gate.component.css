@@ -1,0 +1,19 @@
+.table-container {
+  margin: 20px;
+}
+
+.gate-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.gate-table th, .gate-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.gate-table th {
+  background-color: #f2f2f2;
+}

@@ -1,0 +1,19 @@
+.table-container {
+  margin: 20px;
+}
+
+.airport-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.airport-table th, .airport-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.airport-table th {
+  background-color: #f2f2f2;
+}

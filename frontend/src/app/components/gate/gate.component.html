@@ -1,14 +1,16 @@
-<table class="flight-table">
-  <thead>
-  <tr>
-    <th>Gate number</th>
-    <th>Airport code</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let gate of gates">
-    <td>{{ gate.number }}</td>
-    <td>{{ gate.airportCode }}</td>
-  </tbody>
-</table>
-
+<div class="table-container">
+  <table class="gate-table">
+    <thead>
+    <tr>
+      <th>Gate number</th>
+      <th>Airport code</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let gate of gates">
+      <td>{{ gate.number }}</td>
+      <td>{{ gate.airportCode }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
