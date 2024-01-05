@@ -65,6 +65,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:4200");
+        //TODO: link nog aanpassen
         configuration.addAllowedOrigin("https://api-gateway-xanderputtm.cloud.okteto.net");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
