@@ -1,1 +1,21 @@
-<p>flight works!</p>
+<table class="flight-table">
+  <thead>
+  <tr>
+    <th>Flight number</th>
+    <th>Scheduled time</th>
+    <th>Gate</th>
+    <th>Registration number</th>
+    <th>Capacity</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let flight of flights">
+    <td>{{ flight.flightNumber }}</td>
+    <td>{{ flight.scheduledTime }}</td>
+    <td>{{ flight.gateNumber }}</td>
+    <td>{{ flight.registrationNumber }}</td>
+    <td>{{ flight.capacity }}</td>
+  </tr>
+  </tbody>
+</table>
+

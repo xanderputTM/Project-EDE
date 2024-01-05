@@ -1,10 +1,14 @@
 import { Component, OnInit  } from '@angular/core';
 import { DataService } from '../../services/data.service';
+import {NgForOf} from "@angular/common";
 
 @Component({
   selector: 'app-flight',
   standalone: true,
   templateUrl: './flight.component.html',
+  imports: [
+    NgForOf
+  ],
   styleUrl: './flight.component.scss'
 })
 export class FlightComponent implements OnInit{
