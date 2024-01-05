@@ -43,6 +43,9 @@ Gates consist of:
 
 ### Passenger Service
 The passenger service exists to manage the passengers in our system.
+It also hosts some endpoints that are used by the flight-service in certain situations:
+- If a flight is updated with a new flight number, the flight service will call an endpoint of the passenger service to also update the flight number of all existing passengers of this flight.
+- If a flight is deleted, the flight service will call an endpoint of the passenger service to also delete all existing passengers of this flight.
 
 Passengers consist of:
 - Unique PNR Code
