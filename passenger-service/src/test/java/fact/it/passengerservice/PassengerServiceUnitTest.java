@@ -561,7 +561,7 @@ public class PassengerServiceUnitTest {
     public void testUpdatePassenger_Successful() {
         // Arrange
         Passenger oldPassenger = new Passenger();
-        oldPassenger.setId("3");
+        oldPassenger.setId(3);
         oldPassenger.setFlightNumber("2280");
         oldPassenger.setSeat("1D");
         oldPassenger.setPnrCode("123ABC");
@@ -619,7 +619,7 @@ public class PassengerServiceUnitTest {
     public void testUpdatePassenger_PnrCodeTaken() {
         // Arrange
         Passenger oldPassenger = new Passenger();
-        oldPassenger.setId("3");
+        oldPassenger.setId(3);
         oldPassenger.setFlightNumber("2280");
         oldPassenger.setSeat("1D");
         oldPassenger.setPnrCode("123ABC");
@@ -662,7 +662,7 @@ public class PassengerServiceUnitTest {
     public void testUpdatePassenger_FlightDoesntExist() {
         // Arrange
         Passenger oldPassenger = new Passenger();
-        oldPassenger.setId("3");
+        oldPassenger.setId(3);
         oldPassenger.setFlightNumber("2280");
         oldPassenger.setSeat("1D");
         oldPassenger.setPnrCode("123ABC");
@@ -711,7 +711,7 @@ public class PassengerServiceUnitTest {
     public void testUpdatePassenger_ErrorGettingFlight() {
         // Arrange
         Passenger oldPassenger = new Passenger();
-        oldPassenger.setId("3");
+        oldPassenger.setId(3);
         oldPassenger.setFlightNumber("2280");
         oldPassenger.setSeat("1D");
         oldPassenger.setPnrCode("123ABC");
@@ -756,7 +756,7 @@ public class PassengerServiceUnitTest {
     public void testUpdatePassenger_FlightHasSpaceBadRequest() {
         // Arrange
         Passenger oldPassenger = new Passenger();
-        oldPassenger.setId("3");
+        oldPassenger.setId(3);
         oldPassenger.setFlightNumber("2280");
         oldPassenger.setSeat("1D");
         oldPassenger.setPnrCode("123ABC");
@@ -808,7 +808,7 @@ public class PassengerServiceUnitTest {
     public void testUpdatePassenger_SeatOccupied() {
         // Arrange
         Passenger oldPassenger = new Passenger();
-        oldPassenger.setId("3");
+        oldPassenger.setId(3);
         oldPassenger.setFlightNumber("2280");
         oldPassenger.setSeat("1D");
         oldPassenger.setPnrCode("123ABC");
@@ -863,7 +863,7 @@ public class PassengerServiceUnitTest {
     public void testUpdatePassenger_SuccessConstantFlightNumber() {
         // Arrange
         Passenger oldPassenger = new Passenger();
-        oldPassenger.setId("3");
+        oldPassenger.setId(3);
         oldPassenger.setFlightNumber("2280");
         oldPassenger.setSeat("1D");
         oldPassenger.setPnrCode("123ABC");
@@ -921,7 +921,7 @@ public class PassengerServiceUnitTest {
     public void testUpdatePassenger_NoSpaceRemaining() {
         // Arrange
         Passenger oldPassenger = new Passenger();
-        oldPassenger.setId("3");
+        oldPassenger.setId(3);
         oldPassenger.setFlightNumber("2280");
         oldPassenger.setSeat("1D");
         oldPassenger.setPnrCode("123ABC");
