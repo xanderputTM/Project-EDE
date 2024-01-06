@@ -6,7 +6,7 @@
 |---------------|---------------------------------------------------|
 | `API Gateway` | https://api-gateway-xanderputtm.cloud.okteto.net/ |
 | `Prometheus`  | https://prometheus-xanderputtm.cloud.okteto.net/  |
-| `Front-end`   |                                                   |
+| `Front-end`   | https://microservices-ede.web.app/                |
 
 ## Theme
 In this project for the course Enterprise Development Experience, we have made an application that makes use of microservices to manage flights and passengers in an airport.
