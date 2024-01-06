@@ -63,8 +63,14 @@ A few examples are that it makes it easier to implement authentication.
 It also lets us easily monitor incoming traffic and lets us shield the user from backend changes.
 
 ### Prometheus
-We have chosen to implement Prometheus as an extra component. 
+We have chosen to implement Prometheus as an extra component. To do this we of course also converted our docker compose file to Kubernetes manifest files.
 Prometheus monitors the different microservices and api gateway and allows you to query important metrics to determine their health and status.
+
+As you can see below, prometheus monitors all four of our services, and also the api gateway.
+<img src="images/prometheus_targets.png">
+
+Below you can find an example of monitoring with Prometheus. Here we display the cpu usage of the airport service over a period of an hour in a graph.
+<img src="images/prometheus_graph.png">
 
 ### Front-end
 The front-end website serves as an interface to interact with the microservices in a user-friendly manner.

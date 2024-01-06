@@ -120,9 +120,6 @@ public class PassengerService {
         } catch (Exception e) {
             return new ResponseEntity<>("There is no flight with that flight number!", HttpStatus.BAD_REQUEST);
         }
-
-
-
     }
 
     public ResponseEntity<Object> createPassenger(PassengerDto passengerDto) {
